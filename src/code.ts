@@ -19,9 +19,6 @@ const init = async () => {
     }
   });
 
-  console.log(families, styles)
-
-
   figma.ui.postMessage({
     type: "load-fonts",
     data: {
@@ -42,11 +39,24 @@ figma.on("selectionchange", async () => {
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "apply") {
     console.log('apply', msg)
+    console.log(msg.fonts)
     const selected = figma.currentPage.selection[0]
     if (!selected || selected.type !== "TEXT") return
-    const fontName = { family: msg.family, style: msg.style }
+    // latin
+    const font = msg.fonts[0]
+    // Not latin
+    const font2 = msg.fonts[1]
+    const fontName: FontName = { family: font.family, style: font.style }
+    const fontName2: FontName = { family: font2.family, style: font2.style }
     await figma.loadFontAsync(fontName)
+    await figma.loadFontAsync(fontName2)
     selected.fontName = fontName
+    const regexp = new RegExp(/[\u0000-\u1EFF\u2070-\u218F\u2C60-\u2C7F\uA720–\uA7FF\uAB30–\uAB6F\uFB00–\uFB4F\uFF00–\uFFEF\u1F00-\u2E7F]+/g)
+    const matches = selected.characters.matchAll(regexp)
+    for (const match of matches) {
+      console.log(match)
+      selected.setRangeFontName(match.index, match.index + match[0].length, fontName2)
+    }
     return
   }
 

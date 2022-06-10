@@ -3,7 +3,8 @@
     "target": "es6",
     "lib": [
       "es6",
-      "dom"
+      "dom",
+      "es2020"
     ],
     "jsx": "react",
     "typeRoots": [

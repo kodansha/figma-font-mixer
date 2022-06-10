@@ -15,7 +15,7 @@ const buildHtml = () => {
 const options = {
   entryPoints: ["src/ui.tsx", "src/code.ts"],
   bundle: true,
-  sourcemap: true,
+  sourcemap: false,
   minify: process.env.NODE_ENV === "production",
   watch: {
     onRebuild: (error, result) => {
