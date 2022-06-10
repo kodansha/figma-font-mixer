@@ -1,0 +1,10 @@
+{
+  "name": "FontMixer",
+  "id": "1116965847682325762",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": [
+    "figma"
+  ],
+  "ui": "ui.html"
+}
