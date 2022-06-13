@@ -44,7 +44,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>日本語</h1>
+      <h4>日本語</h4>
       <select autoComplete="on" value={selectedFamily} onChange={e => {
         setSelectedFamily(e.target.value);
       }}>
@@ -55,7 +55,7 @@ const App = () => {
       {data.styles && selectedFamily && (
         <p>{data.styles[selectedFamily]}</p>
       )}
-      <h1>英語</h1>
+      <h4>英語</h4>
       <select autoComplete="on" value={selectedFamily2} onChange={e => {
         setSelectedFamily2(e.target.value);
       }}>

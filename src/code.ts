@@ -1,5 +1,7 @@
 figma.showUI(__html__);
 
+figma.ui.resize(300, 600);
+
 const mapToObject = map =>
   [...map].reduce((l, [k, v]) => Object.assign(l, { [k]: v }), {})
 
