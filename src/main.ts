@@ -3,6 +3,10 @@ import { emit, on, showUI } from "@create-figma-plugin/utilities"
 const mapToObject = map =>
   [...map].reduce((l, [k, v]) => Object.assign(l, { [k]: v }), {})
 
+const isSelectedTextNode = () => {
+  return figma.currentPage.selection.length > 0 && figma.currentPage.selection.filter(node => node.type !== "TEXT").length === 0
+}
+
 export default async () => {
   const availableFonts = await figma.listAvailableFontsAsync();
   const fontNames = availableFonts.map(font => font.fontName);
@@ -21,6 +25,7 @@ export default async () => {
   const data = {
     families: Array.from(families),
     styles: mapToObject(styles),
+    editable: isSelectedTextNode(),
   }
   showUI({
     width: 300,
@@ -28,7 +33,9 @@ export default async () => {
   }, data)
 
   figma.on("selectionchange", async () => {
-    console.log('selectionchange')
+    emit("selectionchange", {
+      editable: isSelectedTextNode()
+    });
   });
 
   on("apply", async (data) => {

@@ -7,11 +7,13 @@ import { FilterInput } from './components/filter-input';
 type Props = {
   families: string[],
   styles: Record<string, string[]>
+  editable: boolean
 }
 
-const App = ({ families, styles }: Props) => {
+const App = ({ families, styles, editable: initialEditable }: Props) => {
   const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
   const [selectedFamily2, setSelectedFamily2] = useState<string | null>(null);
+  const [editable, setEditable] = useState<boolean>(initialEditable);
 
   const apply = () => {
     emit("apply", {
@@ -24,6 +26,12 @@ const App = ({ families, styles }: Props) => {
         }]
     })
   }
+
+  useEffect(() => {
+    on("selectionchange", (data) => {
+      setEditable(data.editable)
+    })
+  })
 
   return (
     <Container space='medium'>
@@ -39,7 +47,7 @@ const App = ({ families, styles }: Props) => {
         <p>{styles[selectedFamily2]}</p>
       )}
       <div style={{ position: 'absolute', bottom: 16, right: 16 }}>
-        <Button onClick={apply}>Apply</Button>
+        <Button disabled={!editable} onClick={apply}>Apply</Button>
       </div>
     </Container>
   );
