@@ -1,7 +1,7 @@
 import { h } from 'preact'
 import { useState, useEffect, useMemo } from 'preact/hooks'
-import { on } from "@create-figma-plugin/utilities"
-import { Button, Container, render } from '@create-figma-plugin/ui'
+import { emit, on } from "@create-figma-plugin/utilities"
+import { Button, Container, render, VerticalSpace } from '@create-figma-plugin/ui'
 import { FilterInput } from './components/filter-input';
 
 type Props = {
@@ -9,49 +9,36 @@ type Props = {
   styles: Record<string, string[]>
 }
 
-const App = (props: Props) => {
-  console.log(props)
-  const [data, setData] = useState<{
-    families: string[],
-    styles: Record<string, string[]>
-  }>({
-    families: props.families,
-    styles: props.styles
-  });
+const App = ({ families, styles }: Props) => {
   const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
   const [selectedFamily2, setSelectedFamily2] = useState<string | null>(null);
 
   const apply = () => {
-    parent.postMessage(
-      {
-        pluginMessage: {
-          type: "apply",
-          fonts: [{
-            family: selectedFamily,
-            style: data.styles[selectedFamily][0]
-          }, {
-            family: selectedFamily2,
-            style: data.styles[selectedFamily2][0]
-          }]
-        }
-      },
-      "*"
-    );
+    emit("apply", {
+      fonts: [{
+        family: selectedFamily,
+        style: styles[selectedFamily][0]
+      }, {
+          family: selectedFamily2,
+          style: styles[selectedFamily2][0]
+        }]
+    })
   }
 
   return (
     <Container space='medium'>
-      <div>
-        <h4>日本語</h4>
-        <FilterInput options={props.families} onChange={(newValue) => setSelectedFamily(newValue)} />
-        {data.styles && selectedFamily && (
-          <p>{data.styles[selectedFamily]}</p>
-        )}
-        <h4>英語</h4>
-        <FilterInput options={props.families} onChange={(newValue) => setSelectedFamily2(newValue)} />
-        {data.styles && selectedFamily2 && (
-          <p>{data.styles[selectedFamily2]}</p>
-        )}
+      <VerticalSpace space="extraSmall" />
+      <h4>Japanese</h4>
+      <FilterInput options={families} onChange={(newValue) => setSelectedFamily(newValue)} />
+      {styles && selectedFamily && (
+        <p>{styles[selectedFamily]}</p>
+      )}
+      <h4>English</h4>
+      <FilterInput options={families} onChange={(newValue) => setSelectedFamily2(newValue)} />
+      {styles && selectedFamily2 && (
+        <p>{styles[selectedFamily2]}</p>
+      )}
+      <div style={{ position: 'absolute', bottom: 16, right: 16 }}>
         <Button onClick={apply}>Apply</Button>
       </div>
     </Container>
