@@ -2,21 +2,31 @@
   "name": "font-mixer",
   "version": "1.0.0",
   "description": "Your Figma Plugin",
-  "main": "code.js",
+  "main": "build/main.js",
   "scripts": {
-    "build": "node build.js"
+    "build": "build-figma-plugin --typecheck --minify",
+    "watch": "build-figma-plugin --typecheck --watch"
   },
   "author": "",
   "license": "",
   "devDependencies": {
+    "@create-figma-plugin/build": "^2.0.1",
+    "@create-figma-plugin/tsconfig": "^2.0.1",
     "@figma/plugin-typings": "*",
     "typescript": "*"
   },
   "dependencies": {
-    "@types/react": "^18.0.12",
-    "@types/react-dom": "^18.0.5",
-    "esbuild": "^0.14.43",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "@create-figma-plugin/ui": "^2.0.1",
+    "@create-figma-plugin/utilities": "^2.0.1",
+    "preact": "^10.7.3"
+  },
+  "figma-plugin": {
+    "editorType": [
+      "figma"
+    ],
+    "id": "font-mixer",
+    "name": "Font Mixer",
+    "main": "src/main.ts",
+    "ui": "src/ui.tsx"
   }
 }

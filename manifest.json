@@ -1,10 +1,10 @@
 {
-  "name": "FontMixer",
-  "id": "1116965847682325762",
   "api": "1.0.0",
-  "main": "dist/code.js",
   "editorType": [
     "figma"
   ],
-  "ui": "dist/ui.html"
+  "id": "font-mixer",
+  "name": "Font Mixer",
+  "main": "build/main.js",
+  "ui": "build/ui.js"
 }

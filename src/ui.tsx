@@ -1,25 +1,24 @@
-import * as React from "react";
-import { createRoot } from "react-dom/client";
+import { h } from 'preact'
+import { useState, useEffect } from 'preact/hooks'
+import { on } from "@create-figma-plugin/utilities"
+import { render } from '@create-figma-plugin/ui'
 
-const App = () => {
-  const [data, setData] = React.useState<{
+const App = (props) => {
+  const [data, setData] = useState<{
     families: string[],
     styles: Record<string, string[]>
   }>({
     families: [],
     styles: {}
   });
-  const [selectedFamily, setSelectedFamily] = React.useState<string | null>(null);
-  const [selectedFamily2, setSelectedFamily2] = React.useState<string | null>(null);
+  const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
+  const [selectedFamily2, setSelectedFamily2] = useState<string | null>(null);
 
-  React.useEffect(() => {
-    window.onmessage = (e) => {
-      const message = e.data.pluginMessage;
-      if (message.type === "load-fonts") {
-        console.log(message)
-        setData(message.data);
-      }
-    };
+  useEffect(() => {
+    on("LOAD_FONTS", (res) => {
+      const { families, styles } = res
+      setData({ families, styles })
+    })
   }, []);
 
   const apply = () => {
@@ -46,7 +45,7 @@ const App = () => {
     <div>
       <h4>日本語</h4>
       <select autoComplete="on" value={selectedFamily} onChange={e => {
-        setSelectedFamily(e.target.value);
+        // setSelectedFamily(e.target.value);
       }}>
         {data.families.map((family) => (
           <option key={family}>{family}</option>
@@ -57,7 +56,7 @@ const App = () => {
       )}
       <h4>英語</h4>
       <select autoComplete="on" value={selectedFamily2} onChange={e => {
-        setSelectedFamily2(e.target.value);
+        // setSelectedFamily2(e.target.value);
       }}>
         {data.families.map((family) => (
           <option key={family}>{family}</option>
@@ -71,6 +70,5 @@ const App = () => {
   );
 };
 
-const root = createRoot(document.getElementById("app"));
-root.render(<App />);
+export default render(App)
 
