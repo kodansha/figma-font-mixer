@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from 'preact/hooks'
 import { emit, on } from "@create-figma-plugin/utilities"
 import { Button, Container, render, VerticalSpace } from '@create-figma-plugin/ui'
 import { FilterInput } from './components/filter-input';
+import { MyDropdown } from './components/dropdown';
 
 type Props = {
   families: string[],
@@ -12,6 +13,7 @@ type Props = {
 
 const App = ({ families, styles, editable: initialEditable }: Props) => {
   const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
   const [selectedFamily2, setSelectedFamily2] = useState<string | null>(null);
   const [editable, setEditable] = useState<boolean>(initialEditable);
 
@@ -38,9 +40,7 @@ const App = ({ families, styles, editable: initialEditable }: Props) => {
       <VerticalSpace space="extraSmall" />
       <h4>Japanese</h4>
       <FilterInput options={families} onChange={(newValue) => setSelectedFamily(newValue)} />
-      {styles && selectedFamily && (
-        <p>{styles[selectedFamily]}</p>
-      )}
+      {styles[selectedFamily] && <MyDropdown options={styles[selectedFamily]} onChange={(newValue) => setSelectedStyle(newValue)} />}
       <h4>English</h4>
       <FilterInput options={families} onChange={(newValue) => setSelectedFamily2(newValue)} />
       {styles && selectedFamily2 && (

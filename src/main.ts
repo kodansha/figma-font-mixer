@@ -29,7 +29,7 @@ export default async () => {
   }
   showUI({
     width: 300,
-    height: 600
+    height: 400
   }, data)
 
   figma.on("selectionchange", async () => {
