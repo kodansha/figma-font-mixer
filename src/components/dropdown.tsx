@@ -4,13 +4,12 @@ import { Dropdown, DropdownOption } from "@create-figma-plugin/ui"
 
 export const MyDropdown = function (props: {
   options: string[]
+  value: string;
   onChange(option: string): void
 }) {
-  const [value, setValue] = useState<string>('Regular')
-
   useEffect(() => {
-    if (!props.options.includes(value)) {
-      setValue(props.options[0])
+    if (!props.options.includes(props.value)) {
+      props.onChange(props.options[0])
     }
   }, props.options)
 
@@ -23,13 +22,12 @@ export const MyDropdown = function (props: {
   const handleChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value
     console.log(newValue)
-    setValue(newValue)
     props.onChange(newValue)
   }
 
-  if (!props.options.includes(value)) {
+  if (!props.options.includes(props.value)) {
     return <Dropdown disabled value={null} options={[{ value: undefined }]} />
   }
   console.log(options)
-  return <Dropdown onChange={handleChange} options={options} value={value} />
+  return <Dropdown onChange={handleChange} options={options} value={props.value} />
 }

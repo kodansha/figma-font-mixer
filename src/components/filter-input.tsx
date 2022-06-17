@@ -4,12 +4,14 @@ import { TextboxAutocomplete, TextboxAutocompleteOption } from "@create-figma-pl
 
 export const FilterInput = ({
   options: rawOptions,
+  initialValue,
   onChange,
 }: {
-  options: string[]
-  onChange(option: string): void
-}) => {
-  const [value, setValue] = useState<string>(rawOptions[0])
+    options: string[];
+    initialValue: string;
+    onChange(option: string): void;
+  }) => {
+  const [value, setValue] = useState(initialValue)
   const options: TextboxAutocompleteOption[] = useMemo(() => {
     return rawOptions.map(family => {
       return { value: family }

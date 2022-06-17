@@ -11,11 +11,22 @@ type Props = {
   editable: boolean
 }
 
+const defaultFonts = {
+  ja: {
+    family: "Noto Sans JP",
+    style: "Medium"
+  },
+  en: {
+    family: "Inter",
+    style: "Medium",
+  }
+}
+
 const App = ({ families, styles, editable: initialEditable }: Props) => {
-  const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
-  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
-  const [selectedFamily2, setSelectedFamily2] = useState<string | null>(null);
-  const [selectedStyle2, setSelectedStyle2] = useState<string | null>(null);
+  const [selectedFamily, setSelectedFamily] = useState<string | null>(defaultFonts.ja.family);
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(defaultFonts.ja.style);
+  const [selectedFamily2, setSelectedFamily2] = useState<string | null>(defaultFonts.en.family);
+  const [selectedStyle2, setSelectedStyle2] = useState<string | null>(defaultFonts.en.style);
   const [editable, setEditable] = useState<boolean>(initialEditable);
 
   const apply = () => {
@@ -42,11 +53,11 @@ const App = ({ families, styles, editable: initialEditable }: Props) => {
     <Container space='medium'>
       <VerticalSpace space="extraSmall" />
       <h4>Japanese</h4>
-      <FilterInput options={families} onChange={(newValue) => setSelectedFamily(newValue)} />
-      <MyDropdown options={styles[selectedFamily] ?? []} onChange={(newValue) => setSelectedStyle(newValue)} />
+      <FilterInput options={families} initialValue={selectedFamily} onChange={(newValue) => setSelectedFamily(newValue)} />
+      <MyDropdown options={styles[selectedFamily] ?? []} value={selectedStyle} onChange={(newValue) => setSelectedStyle(newValue)} />
       <h4>English</h4>
-      <FilterInput options={families} onChange={(newValue) => setSelectedFamily2(newValue)} />
-      <MyDropdown options={styles[selectedFamily2] ?? []} onChange={(newValue) => setSelectedStyle2(newValue)} />
+      <FilterInput options={families} initialValue={selectedFamily2} onChange={(newValue) => setSelectedFamily2(newValue)} />
+      <MyDropdown options={styles[selectedFamily2] ?? []} value={selectedStyle2} onChange={(newValue) => setSelectedStyle2(newValue)} />
       <div style={{ position: 'absolute', bottom: 16, right: 16 }}>
         <Button disabled={!editable} onClick={apply}>Apply</Button>
       </div>
