@@ -7,6 +7,15 @@ const isSelectedTextNode = () => {
   return figma.currentPage.selection.length > 0 && figma.currentPage.selection.filter(node => node.type !== "TEXT").length === 0
 }
 
+const regexps = {
+  japanese: /(?:[々〇〻\u2E80-\u2FDF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\u3041-\u3096\u30A1-\u30FC\uff1a-\uff20\u3001-\u301b]|[\uD840-\uD87F][\uDC00-\uDFFF])+/g,
+  kana: /[\u3041-\u3096\u30A1-\u30FC]+/g,
+  // ref: https://tama-san.com/kanji-regex/
+  kanji: /(?:[々〇〻\u2E80-\u2FDF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]|[\uD840-\uD87F][\uDC00-\uDFFF])+/g,
+  yakumono: /[\u3001-\u301b]+/g,
+  number: /\d+/g,
+}
+
 export default async () => {
   const availableFonts = await figma.listAvailableFontsAsync();
   const fontNames = availableFonts.map(font => font.fontName);
@@ -39,23 +48,27 @@ export default async () => {
   });
 
   on("apply", async (data) => {
-    const { fonts } = data;
+    const { fonts } = data as {
+      fonts: Record<string, FontName>
+    };
     const selected = figma.currentPage.selection[0]
     if (!selected || selected.type !== "TEXT") return
-    // latin
-    const font = fonts[0]
-    // Not latin
-    const font2 = fonts[1]
-    const fontName: FontName = { family: font.family, style: font.style }
-    const fontName2: FontName = { family: font2.family, style: font2.style }
-    await figma.loadFontAsync(fontName)
-    await figma.loadFontAsync(fontName2)
-    selected.fontName = fontName
-    const regexp = new RegExp(/[\u0000-\u1EFF\u2070-\u218F\u2C60-\u2C7F\uA720–\uA7FF\uAB30–\uAB6F\uFB00–\uFB4F\uFF00–\uFFEF\u1F00-\u2E7F]+/g)
-    const matches = selected.characters.matchAll(regexp)
-    for (const match of matches) {
-      console.log(match)
-      selected.setRangeFontName(match.index, match.index + match[0].length, fontName2)
+
+    const fontNames = Object.values(fonts)
+    for (let i = 0; i < fontNames.length; i++) {
+      await figma.loadFontAsync(fontNames[i])
     }
+
+    const { normal, ...categories } = fonts;
+    selected.fontName = normal
+
+    Object.keys(categories).forEach(categoryKey => {
+      const regexp = regexps[categoryKey]
+      const matches = selected.characters.matchAll(regexp)
+      const fontName = categories[categoryKey]
+      for (const match of matches) {
+        selected.setRangeFontName(match.index, match.index + match[0].length, fontName)
+      }
+    })
   })
 }
