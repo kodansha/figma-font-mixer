@@ -27,6 +27,13 @@
     "id": "font-mixer",
     "name": "Font Mixer",
     "main": "src/main.ts",
-    "ui": "src/ui.tsx"
+    "ui": "src/ui.tsx",
+    "relaunchButtons": {
+      "openPlugin": {
+        "name": "Open FontMixer",
+        "main": "src/main.ts",
+        "ui": "src/ui.tsx"
+      }
+    }
   }
 }

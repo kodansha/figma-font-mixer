@@ -1,4 +1,4 @@
-import { emit, on, showUI } from "@create-figma-plugin/utilities"
+import { emit, on, showUI, setRelaunchButton } from "@create-figma-plugin/utilities"
 
 const mapToObject = map =>
   [...map].reduce((l, [k, v]) => Object.assign(l, { [k]: v }), {})
@@ -38,7 +38,7 @@ export default async () => {
   }
   showUI({
     width: 300,
-    height: 400
+    height: 420
   }, data)
 
   figma.on("selectionchange", async () => {
@@ -70,5 +70,7 @@ export default async () => {
         selected.setRangeFontName(match.index, match.index + match[0].length, fontName)
       }
     })
+
+    setRelaunchButton(selected, "openPlugin")
   })
 }

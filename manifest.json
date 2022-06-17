@@ -6,5 +6,11 @@
   "id": "font-mixer",
   "name": "Font Mixer",
   "main": "build/main.js",
-  "ui": "build/ui.js"
+  "ui": "build/ui.js",
+  "relaunchButtons": [
+    {
+      "name": "Open FontMixer",
+      "command": "openPlugin"
+    }
+  ]
 }
