@@ -32,8 +32,9 @@ const FontSelector = (props: {
   onChange: StateUpdater<Fonts>
   familyOptions: string[]
   styleOptions: string[]
+  top?: boolean
 }) => {
-  const { category, fontName, onChange, familyOptions, styleOptions } = props
+  const { category, fontName, onChange, familyOptions, styleOptions, top } = props
   const { family, style } = fontName
 
   const onChangeFaimly = (next: string) => {
@@ -45,7 +46,7 @@ const FontSelector = (props: {
 
   return <Container space='extraSmall' style={{ display: 'flex' }}>
     <div style={{ minWidth: '60%' }}>
-      <FilterInput options={familyOptions} initialValue={family} onChange={onChangeFaimly} />
+      <FilterInput options={familyOptions} initialValue={family} onChange={onChangeFaimly} top={top} />
     </div>
     <MyDropdown options={styleOptions} value={style} onChange={onChangeStyle} />
   </Container>
@@ -64,7 +65,7 @@ const App = ({ families, styles, editable: initialEditable, settings }: Props) =
     on("selectionchange", (data) => {
       setEditable(data.editable)
     })
-  })
+  }, [])
 
   return (
     <Fragment>
@@ -101,14 +102,7 @@ const App = ({ families, styles, editable: initialEditable, settings }: Props) =
             onChange={setFonts}
             familyOptions={families}
             styleOptions={styles[fonts.number.family] ?? []}
-          />
-          <Heading>Default</Heading>
-          <FontSelector
-            category='normal'
-            fontName={fonts.normal}
-            onChange={setFonts}
-            familyOptions={families}
-            styleOptions={styles[fonts.normal.family] ?? []}
+            top
           />
         </Fragment>
         :
@@ -121,17 +115,18 @@ const App = ({ families, styles, editable: initialEditable, settings }: Props) =
             familyOptions={families}
             styleOptions={styles[fonts.japanese.family] ?? []}
           />
-          <Heading>Default</Heading>
-          <FontSelector
-            category='normal'
-            fontName={fonts.normal}
-            onChange={setFonts}
-            familyOptions={families}
-            styleOptions={styles[fonts.normal.family] ?? []}
-          />
         </Fragment>
       }
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, }}>
+      <Heading>Default</Heading>
+      <FontSelector
+        category='normal'
+        fontName={fonts.normal}
+        onChange={setFonts}
+        familyOptions={families}
+        styleOptions={styles[fonts.normal.family] ?? []}
+        top={isDetail}
+      />
+      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, backgroundColor: 'var(--figma-color-bg)' }}>
         <Divider />
         <div style={{ padding: 8, display: 'flex', alignItems: 'center', width: '100%' }}>
           <div style={{ marginLeft: 4, marginRight: 'auto' }}>

@@ -21,13 +21,11 @@ export const MyDropdown = function (props: {
 
   const handleChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value
-    console.log(newValue)
     props.onChange(newValue)
   }
 
   if (!props.options.includes(props.value)) {
     return <Dropdown disabled value={null} options={[{ value: undefined }]} />
   }
-  console.log(options)
   return <Dropdown onChange={handleChange} options={options} value={props.value} />
 }
