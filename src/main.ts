@@ -1,5 +1,5 @@
-import { emit, on, showUI, setRelaunchButton, saveSettingsAsync } from "@create-figma-plugin/utilities"
-import { Category, Fonts } from './types'
+import { emit, on, showUI, setRelaunchButton, saveSettingsAsync, loadSettingsAsync } from "@create-figma-plugin/utilities"
+import { Category, Fonts, Settings } from './types'
 
 const mapToObject = map =>
   [...map].reduce((l, [k, v]) => Object.assign(l, { [k]: v }), {})
@@ -17,6 +17,29 @@ const regexps: Record<Exclude<Category, "normal">, RegExp> = {
   number: /\d+/g,
 }
 
+const defaultFonts: Record<'ja' | 'en', FontName> = {
+  ja: {
+    family: "Noto Sans JP",
+    style: "Medium"
+  },
+  en: {
+    family: "Inter",
+    style: "Medium",
+  }
+}
+
+const defaultSettings: Settings = {
+  fontMode: 'simple',
+  fonts: {
+    japanese: defaultFonts.ja,
+    kanji: defaultFonts.ja,
+    kana: defaultFonts.ja,
+    yakumono: defaultFonts.ja,
+    number: defaultFonts.en,
+    normal: defaultFonts.en,
+  }
+}
+
 export default async () => {
   const availableFonts = await figma.listAvailableFontsAsync();
   const fontNames = availableFonts.map(font => font.fontName);
@@ -32,10 +55,13 @@ export default async () => {
     }
   });
 
+  const settings = await loadSettingsAsync(defaultSettings, 'fonts')
+
   const data = {
     families: Array.from(families),
     styles: mapToObject(styles),
     editable: isSelectedTextNode(),
+    settings
   }
   showUI({
     width: 300,
@@ -49,9 +75,13 @@ export default async () => {
   });
 
   on("apply", async (data) => {
-    const { fonts } = data as {
+    console.log('apply', data)
+    const { fonts, fontMode } = data as {
+      fontMode: 'simple' | 'advanced'
       fonts: Fonts
     };
+
+    const { japanese, kanji, kana, yakumono, number, normal } = fonts
     const selected = figma.currentPage.selection[0]
     if (!selected || selected.type !== "TEXT") return
 
@@ -60,8 +90,11 @@ export default async () => {
       await figma.loadFontAsync(fontNames[i])
     }
 
-    const { normal, ...categories } = fonts;
+    const categories = fontMode === 'simple' ? { japanese } : { kanji, kana, yakumono, number }
     selected.fontName = normal
+
+    const settings: Settings = { fonts, fontMode }
+    await saveSettingsAsync(settings, 'fonts')
 
     Object.keys(categories).forEach(categoryKey => {
       const regexp = regexps[categoryKey]

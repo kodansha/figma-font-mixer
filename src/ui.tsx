@@ -5,23 +5,13 @@ import { Button, Container, Divider, render, VerticalSpace, Text, Bold } from '@
 import { FilterInput } from './components/filter-input';
 import { MyDropdown } from './components/dropdown';
 import { Checkbox } from './components/checkbox';
-import { Fonts, Category } from "./types"
+import { Fonts, Category, Settings } from "./types"
 
 type Props = {
   families: string[],
   styles: Record<string, string[]>
   editable: boolean
-}
-
-const defaultFonts: Record<'ja' | 'en', FontName> = {
-  ja: {
-    family: "Noto Sans JP",
-    style: "Medium"
-  },
-  en: {
-    family: "Inter",
-    style: "Medium",
-  }
+  settings: Settings
 }
 
 const Heading = (props: {
@@ -61,26 +51,13 @@ const FontSelector = (props: {
   </Container>
 }
 
-const App = ({ families, styles, editable: initialEditable }: Props) => {
+const App = ({ families, styles, editable: initialEditable, settings }: Props) => {
   const [editable, setEditable] = useState<boolean>(initialEditable);
-  const [isDetail, setDetail] = useState(false)
-
-  const [fonts, setFonts] = useState<Fonts>({
-    japanese: defaultFonts.ja,
-    kanji: defaultFonts.ja,
-    kana: defaultFonts.ja,
-    yakumono: defaultFonts.ja,
-    number: defaultFonts.en,
-    normal: defaultFonts.en,
-  })
+  const [isDetail, setDetail] = useState(settings.fontMode === 'advanced')
+  const [fonts, setFonts] = useState<Fonts>(settings.fonts)
 
   const apply = () => {
-    const { japanese, kanji, kana, yakumono, number, normal } = fonts
-    const data = isDetail ? { kanji, kana, yakumono, number, normal } : { japanese, normal }
-    emit("apply", {
-      fonts: data,
-      fontMode: isDetail ? 'simple' : 'advanced'
-    })
+    emit("apply", { fonts, fontMode: isDetail ? 'advanced' : 'simple' })
   }
 
   useEffect(() => {
