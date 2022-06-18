@@ -1,4 +1,5 @@
-import { emit, on, showUI, setRelaunchButton } from "@create-figma-plugin/utilities"
+import { emit, on, showUI, setRelaunchButton, saveSettingsAsync } from "@create-figma-plugin/utilities"
+import { Category, Fonts } from './types'
 
 const mapToObject = map =>
   [...map].reduce((l, [k, v]) => Object.assign(l, { [k]: v }), {})
@@ -7,7 +8,7 @@ const isSelectedTextNode = () => {
   return figma.currentPage.selection.length > 0 && figma.currentPage.selection.filter(node => node.type !== "TEXT").length === 0
 }
 
-const regexps = {
+const regexps: Record<Exclude<Category, "normal">, RegExp> = {
   japanese: /(?:[々〇〻\u2E80-\u2FDF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\u3041-\u3096\u30A1-\u30FC\uff1a-\uff20\u3001-\u301b]|[\uD840-\uD87F][\uDC00-\uDFFF])+/g,
   kana: /[\u3041-\u3096\u30A1-\u30FC]+/g,
   // ref: https://tama-san.com/kanji-regex/
@@ -49,7 +50,7 @@ export default async () => {
 
   on("apply", async (data) => {
     const { fonts } = data as {
-      fonts: Record<string, FontName>
+      fonts: Fonts
     };
     const selected = figma.currentPage.selection[0]
     if (!selected || selected.type !== "TEXT") return

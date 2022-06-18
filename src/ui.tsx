@@ -5,6 +5,7 @@ import { Button, Container, Divider, render, VerticalSpace, Text, Bold } from '@
 import { FilterInput } from './components/filter-input';
 import { MyDropdown } from './components/dropdown';
 import { Checkbox } from './components/checkbox';
+import { Fonts, Category } from "./types"
 
 type Props = {
   families: string[],
@@ -60,10 +61,6 @@ const FontSelector = (props: {
   </Container>
 }
 
-type Category = 'japanese' | 'kanji' | 'kana' | 'yakumono' | 'number' | 'default'
-type FontName = { family: string, style: string }
-type Fonts = Record<Category, FontName>
-
 const App = ({ families, styles, editable: initialEditable }: Props) => {
   const [editable, setEditable] = useState<boolean>(initialEditable);
   const [isDetail, setDetail] = useState(false)
@@ -74,14 +71,15 @@ const App = ({ families, styles, editable: initialEditable }: Props) => {
     kana: defaultFonts.ja,
     yakumono: defaultFonts.ja,
     number: defaultFonts.en,
-    default: defaultFonts.en,
+    normal: defaultFonts.en,
   })
 
   const apply = () => {
-    const { japanese, kanji, kana, yakumono, number, default: normal } = fonts
+    const { japanese, kanji, kana, yakumono, number, normal } = fonts
     const data = isDetail ? { kanji, kana, yakumono, number, normal } : { japanese, normal }
     emit("apply", {
-      fonts: data
+      fonts: data,
+      fontMode: isDetail ? 'simple' : 'advanced'
     })
   }
 
@@ -129,11 +127,11 @@ const App = ({ families, styles, editable: initialEditable }: Props) => {
           />
           <Heading>Default</Heading>
           <FontSelector
-            category='default'
-            fontName={fonts.default}
+            category='normal'
+            fontName={fonts.normal}
             onChange={setFonts}
             familyOptions={families}
-            styleOptions={styles[fonts.default.family] ?? []}
+            styleOptions={styles[fonts.normal.family] ?? []}
           />
         </Fragment>
         :
@@ -148,11 +146,11 @@ const App = ({ families, styles, editable: initialEditable }: Props) => {
           />
           <Heading>Default</Heading>
           <FontSelector
-            category='default'
-            fontName={fonts.default}
+            category='normal'
+            fontName={fonts.normal}
             onChange={setFonts}
             familyOptions={families}
-            styleOptions={styles[fonts.default.family] ?? []}
+            styleOptions={styles[fonts.normal.family] ?? []}
           />
         </Fragment>
       }
