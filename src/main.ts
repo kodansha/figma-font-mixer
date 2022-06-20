@@ -1,7 +1,7 @@
 import { emit, on, showUI, setRelaunchButton, saveSettingsAsync, loadSettingsAsync } from "@create-figma-plugin/utilities"
 import { Category, Fonts, Settings } from './types'
 
-const mapToObject = map =>
+const mapToObject = (map: Map<string, string[]>): Record<string, string[]> =>
   [...map].reduce((l, [k, v]) => Object.assign(l, { [k]: v }), {})
 
 const isSelectedTextNode = () => {
@@ -40,29 +40,67 @@ const defaultSettings: Settings = {
   }
 }
 
+const styleMapping: Record<string, number> = {
+  'Thin': 100,
+  'UltraLight': 200,
+  'ExtraLight': 200,
+  'Light': 300,
+  'Regular': 400,
+  'Medium': 500,
+  'SemiBold': 600,
+  'Bold': 700,
+  'ExtraBold': 800,
+  'Heavy': 800,
+  'Black': 900,
+  'W0': 100,
+  'W1': 200,
+  'W2': 250,
+  'W3': 300,
+  'W4': 400,
+  'W5': 500,
+  'W6': 600,
+  'W7': 700,
+  'W8': 800,
+  'W9': 900,
+}
+
 export default async () => {
   const availableFonts = await figma.listAvailableFontsAsync();
   const fontNames = availableFonts.map(font => font.fontName);
 
   const families = new Set();
-  const styles = new Map()
+  const styleMap = new Map<string, string[]>()
   fontNames.forEach(font => {
     families.add(font.family);
-    if (!styles.has(font.family)) {
-      styles.set(font.family, [font.style]);
+    if (!styleMap.has(font.family)) {
+      styleMap.set(font.family, [font.style]);
     } else {
-      styles.get(font.family).push(font.style);
+      styleMap.get(font.family).push(font.style);
     }
   });
 
-  const settings = await loadSettingsAsync(defaultSettings, 'fonts')
+  const styles = mapToObject(styleMap)
+  Object.keys(styles).map(key => {
+    const values = styles[key];
+    const sorted = values.map(style => {
+      const match = Object.keys(styleMapping).find(pattern => style.includes(pattern))
+      const weight = styleMapping[match] ?? 400
+      const italic = style.includes('Italic')
+      return { label: style, weight, italic }
+    })
+      .sort((a, b) => a.weight - b.weight - (Number(b.italic) - Number(a.italic)) * 1000)
+      .map(({ label }) => label)
+    styles[key] = sorted
+  })
 
+  const settings = await loadSettingsAsync(defaultSettings, 'fonts')
   const data = {
     families: Array.from(families),
-    styles: mapToObject(styles),
     editable: isSelectedTextNode(),
+    styles,
     settings
   }
+
   showUI({
     width: 300,
     height: 420
