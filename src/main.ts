@@ -76,10 +76,7 @@ export default async () => {
         fonts: Fonts;
       };
 
-      const selected = figma.currentPage.selection[0];
-      if (!selected || selected.type !== 'TEXT') {
-        return;
-      }
+      if (!isSelectedTextNode()) return
 
       const fontNames = Object.values(fonts);
       for (let i = 0; i < fontNames.length; i++) {
@@ -93,25 +90,27 @@ export default async () => {
         yakumono,
         number,
       };
-      selected.fontName = normal;
 
       const settings: Settings = { fonts, fontMode };
       await saveSettingsAsync(settings, 'fonts');
 
-      Object.keys(categories).forEach((categoryKey) => {
-        const regexp = regexps[categoryKey];
-        const matches = selected.characters.matchAll(regexp);
-        const fontName = categories[categoryKey];
-        for (const match of matches) {
-          selected.setRangeFontName(
-            match.index,
-            match.index + match[0].length,
-            fontName,
-          );
-        }
-      },);
-
-      setRelaunchButton(selected, 'openPlugin');
+      figma.currentPage.selection.filter((node): node is TextNode => node.type === "TEXT")
+        .forEach(node => {
+          node.fontName = normal;
+          Object.keys(categories).forEach((categoryKey) => {
+            const regexp = regexps[categoryKey];
+            const matches = node.characters.matchAll(regexp);
+            const fontName = categories[categoryKey];
+            for (const match of matches) {
+              node.setRangeFontName(
+                match.index,
+                match.index + match[0].length,
+                fontName,
+              );
+            }
+          });
+          setRelaunchButton(node, 'openPlugin');
+        })
     },
   );
 };
