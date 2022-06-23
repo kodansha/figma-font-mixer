@@ -1,71 +1,102 @@
-import { Fragment, h } from 'preact'
-import { useState, useEffect, StateUpdater } from 'preact/hooks'
-import { emit, on } from "@create-figma-plugin/utilities"
-import { Button, Container, Divider, render, VerticalSpace, Text, Bold } from '@create-figma-plugin/ui'
+import { Fragment, h } from 'preact';
+import { useState, useEffect, StateUpdater } from 'preact/hooks';
+import { emit, on } from '@create-figma-plugin/utilities';
+import {
+  Button,
+  Container,
+  Divider,
+  render,
+  VerticalSpace,
+  Text,
+  Bold,
+} from '@create-figma-plugin/ui';
 import { FilterInput } from './components/filter-input';
 import { MyDropdown } from './components/dropdown';
 import { Checkbox } from './components/checkbox';
-import { Fonts, Category, Settings } from "./types"
+import { Fonts, Category, Settings } from './types';
 
 type Props = {
-  families: string[],
-  styles: Record<string, string[]>
-  editable: boolean
-  settings: Settings
-}
+  families: string[];
+  styles: Record<string, string[]>;
+  editable: boolean;
+  settings: Settings;
+};
 
-const Heading = (props: {
-  children: string
-}) => {
+const Heading = (
+  props: {
+    children: string;
+  },
+) => {
   return <Fragment>
     <VerticalSpace space="large" />
     <Container space='medium'>
       <Text><Bold>{props.children}</Bold></Text>
     </Container>
     <VerticalSpace space="small" />
-  </Fragment>
-}
+  </Fragment>;
+};
 
-const FontSelector = (props: {
-  category: Category
-  fontName: FontName
-  onChange: StateUpdater<Fonts>
-  familyOptions: string[]
-  styleOptions: string[]
-  top?: boolean
-}) => {
-  const { category, fontName, onChange, familyOptions, styleOptions, top } = props
-  const { family, style } = fontName
+const FontSelector = (
+  props: {
+    category: Category;
+    fontName: FontName;
+    onChange: StateUpdater<Fonts>;
+    familyOptions: string[];
+    styleOptions: string[];
+    top?: boolean;
+  },
+) => {
+  const {
+    category,
+    fontName,
+    onChange,
+    familyOptions,
+    styleOptions,
+    top,
+  } = props;
+  const { family, style } = fontName;
 
   const onChangeFaimly = (next: string) => {
-    onChange(prev => ({ ...prev, [category]: { ...prev[category], family: next } }))
-  }
+    onChange(
+      (prev) => ({ ...prev, [category]: { ...prev[category], family: next } }),
+    );
+  };
   const onChangeStyle = (next: string) => {
-    onChange(prev => ({ ...prev, [category]: { ...prev[category], style: next } }))
-  }
+    onChange(
+      (prev) => ({ ...prev, [category]: { ...prev[category], style: next } }),
+    );
+  };
 
   return <Container space='extraSmall' style={{ display: 'flex' }}>
     <div style={{ minWidth: '60%' }}>
       <FilterInput options={familyOptions} initialValue={family} onChange={onChangeFaimly} top={top} />
     </div>
     <MyDropdown options={styleOptions} value={style} onChange={onChangeStyle} />
-  </Container>
-}
+  </Container>;
+};
 
-const App = ({ families, styles, editable: initialEditable, settings }: Props) => {
+const App = (
+  { families, styles, editable: initialEditable, settings }: Props,
+) => {
   const [editable, setEditable] = useState<boolean>(initialEditable);
-  const [isDetail, setDetail] = useState(settings.fontMode === 'advanced')
-  const [fonts, setFonts] = useState<Fonts>(settings.fonts)
+  const [isDetail, setDetail] = useState(settings.fontMode === 'advanced');
+  const [fonts, setFonts] = useState<Fonts>(settings.fonts);
 
   const apply = () => {
-    emit("apply", { fonts, fontMode: isDetail ? 'advanced' : 'simple' })
-  }
+    emit('apply', { fonts, fontMode: isDetail ? 'advanced' : 'simple' });
+  };
 
-  useEffect(() => {
-    on("selectionchange", (data) => {
-      setEditable(data.editable)
-    })
-  }, [])
+  useEffect(
+    () => {
+      on(
+        'selectionchange',
+        (data) => {
+          setEditable(data.editable);
+        },
+      );
+    },
+    [],
+  );
 
   return (
     <Fragment>
@@ -139,5 +170,4 @@ const App = ({ families, styles, editable: initialEditable, settings }: Props) =
   );
 };
 
-export default render(App)
-
+export default render(App);
