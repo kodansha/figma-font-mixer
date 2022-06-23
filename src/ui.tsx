@@ -13,7 +13,13 @@ import {
 import { FilterInput } from './components/filter-input';
 import { MyDropdown } from './components/dropdown';
 import { Checkbox } from './components/checkbox';
-import { Fonts, Category, Settings } from './types';
+import {
+  Fonts,
+  Category,
+  Settings,
+  ApplyHandler,
+  SelectionChangeHandler,
+} from './types';
 
 type Props = {
   families: string[];
@@ -83,15 +89,18 @@ const App = (
   const [fonts, setFonts] = useState<Fonts>(settings.fonts);
 
   const apply = () => {
-    emit('apply', { fonts, fontMode: isDetail ? 'advanced' : 'simple' });
+    emit<ApplyHandler>(
+      'APPLY',
+      { fonts, fontMode: isDetail ? 'advanced' : 'simple' },
+    );
   };
 
   useEffect(
     () => {
-      on(
-        'selectionchange',
-        (data) => {
-          setEditable(data.editable);
+      on<SelectionChangeHandler>(
+        'SELECTION_CHANGE',
+        (nextEditable) => {
+          setEditable(nextEditable);
         },
       );
     },

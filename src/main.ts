@@ -6,7 +6,7 @@ import {
   saveSettingsAsync,
   loadSettingsAsync,
 } from '@create-figma-plugin/utilities';
-import { Fonts, Settings } from './types';
+import { Settings, ApplyHandler, SelectionChangeHandler } from './types';
 import { sortStyles, regexps, defaultSettings } from './utils';
 
 const mapToObject = (map: Map<string, string[]>): Record<string, string[]> =>
@@ -58,25 +58,18 @@ export default async () => {
   figma.on(
     'selectionchange',
     async () => {
-      emit(
-        'selectionchange',
-        {
-          editable: isSelectedTextNode(),
-        },
-      );
+      emit<SelectionChangeHandler>('SELECTION_CHANGE', isSelectedTextNode());
     },
   );
 
-  on(
-    'apply',
+  on<ApplyHandler>(
+    'APPLY',
     async (data) => {
-      console.log('apply', data);
-      const { fonts, fontMode } = data as {
-        fontMode: 'simple' | 'advanced';
-        fonts: Fonts;
-      };
+      const { fonts, fontMode } = data;
 
-      if (!isSelectedTextNode()) return
+      if (!isSelectedTextNode()) {
+        return;
+      }
 
       const fontNames = Object.values(fonts);
       for (let i = 0; i < fontNames.length; i++) {
@@ -94,23 +87,24 @@ export default async () => {
       const settings: Settings = { fonts, fontMode };
       await saveSettingsAsync(settings, 'fonts');
 
-      figma.currentPage.selection.filter((node): node is TextNode => node.type === "TEXT")
-        .forEach(node => {
-          node.fontName = normal;
-          Object.keys(categories).forEach((categoryKey) => {
-            const regexp = regexps[categoryKey];
-            const matches = node.characters.matchAll(regexp);
-            const fontName = categories[categoryKey];
-            for (const match of matches) {
-              node.setRangeFontName(
-                match.index,
-                match.index + match[0].length,
-                fontName,
-              );
-            }
-          });
-          setRelaunchButton(node, 'openPlugin');
-        })
+      figma.currentPage.selection.filter(
+        (node): node is TextNode => node.type === 'TEXT',
+      ).forEach((node) => {
+        node.fontName = normal;
+        Object.keys(categories).forEach((categoryKey) => {
+          const regexp = regexps[categoryKey];
+          const matches = node.characters.matchAll(regexp);
+          const fontName = categories[categoryKey];
+          for (const match of matches) {
+            node.setRangeFontName(
+              match.index,
+              match.index + match[0].length,
+              fontName,
+            );
+          }
+        },);
+        setRelaunchButton(node, 'openPlugin');
+      },);
     },
   );
 };
