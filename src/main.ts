@@ -6,7 +6,7 @@ import {
   saveSettingsAsync,
   loadSettingsAsync,
 } from '@create-figma-plugin/utilities';
-import { Settings, ApplyHandler, SelectionChangeHandler } from './types';
+import { Settings, ApplyHandler, SelectionChangeHandler, Category } from './types';
 import { sortStyles, regexps, defaultSettings } from './utils';
 
 const mapToObject = (map: Map<string, string[]>): Record<string, string[]> =>
@@ -29,7 +29,7 @@ export default async () => {
     if (!styleMap.has(font.family)) {
       styleMap.set(font.family, [font.style]);
     } else {
-      styleMap.get(font.family).push(font.style);
+      styleMap.get(font.family)?.push(font.style);
     }
   },);
 
@@ -77,7 +77,7 @@ export default async () => {
       }
 
       const { japanese, kanji, kana, yakumono, number, normal } = fonts;
-      const categories = fontMode === 'simple' ? { japanese } : {
+      const categories: Partial<Record<Exclude<Category, "normal">, FontName>> = fontMode === 'simple' ? { japanese } : {
         kanji,
         kana,
         yakumono,
@@ -91,14 +91,15 @@ export default async () => {
         (node): node is TextNode => node.type === 'TEXT',
       ).forEach((node) => {
         node.fontName = normal;
-        Object.keys(categories).forEach((categoryKey) => {
+        (Object.keys(categories) as (keyof typeof categories)[]).forEach((categoryKey) => {
           const regexp = regexps[categoryKey];
           const matches = node.characters.matchAll(regexp);
           const fontName = categories[categoryKey];
+          if (!fontName) return;
           for (const match of matches) {
             node.setRangeFontName(
-              match.index,
-              match.index + match[0].length,
+              (match.index || 0),
+              (match.index || 0) + match[0].length,
               fontName,
             );
           }

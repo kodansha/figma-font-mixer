@@ -53,7 +53,7 @@ export const sortStyles = (styles: string[]) => {
       const match = Object.keys(styleMapping).find(
         (pattern) => style.includes(pattern),
       );
-      const weight = styleMapping[match] ?? 400;
+      const weight = match ? styleMapping[match] : 400;
       const italic = style.includes('Italic');
       return { label: style, weight, italic };
     },)
