@@ -28,37 +28,29 @@ type Props = {
   settings: Settings;
 };
 
-const Heading = (
-  props: {
-    children: string;
-  },
-) => {
-  return <Fragment>
-    <VerticalSpace space="large" />
-    <Container space='medium'>
-      <Text><Bold>{props.children}</Bold></Text>
-    </Container>
-    <VerticalSpace space="small" />
-  </Fragment>;
+const Heading = (props: {
+  children: string;
+}) => {
+  return (
+    <Fragment>
+      <VerticalSpace space="large" />
+      <Container space='medium'>
+        <Text><Bold>{props.children}</Bold></Text>
+      </Container>
+      <VerticalSpace space="small" />
+    </Fragment>
+  );
 };
 
-const FontSelector = (
-  props: {
-    category: Category;
-    fontName: FontName;
-    onChange: StateUpdater<Fonts>;
-    familyOptions: string[];
-    styleOptions: string[];
-    top?: boolean;
-  },
-) => {
-  const {
-    category,
-    fontName,
-    onChange,
-    familyOptions,
-    styleOptions,
-  } = props;
+const FontSelector = (props: {
+  category: Category;
+  fontName: FontName;
+  onChange: StateUpdater<Fonts>;
+  familyOptions: string[];
+  styleOptions: string[];
+  top?: boolean;
+}) => {
+  const { category, fontName, onChange, familyOptions, styleOptions } = props;
   const { family, style } = fontName;
 
   const onChangeFaimly = (next: string) => {
@@ -72,102 +64,102 @@ const FontSelector = (
     );
   };
 
-  return <Container space='extraSmall' style={{ display: 'flex' }}>
-    <div style={{ minWidth: '60%' }}>
-      <FilterInput options={familyOptions} initialValue={family} onChange={onChangeFaimly} />
-    </div>
-    <MyDropdown options={styleOptions} value={style} onChange={onChangeStyle} />
-  </Container>;
+  return (
+    <Container space='extraSmall' style={{ display: 'flex' }}>
+      <div style={{ minWidth: '60%' }}>
+        <FilterInput
+          options={familyOptions}
+          initialValue={family}
+          onChange={onChangeFaimly}
+        />
+      </div>
+      <MyDropdown
+        options={styleOptions}
+        value={style}
+        onChange={onChangeStyle}
+      />
+    </Container>
+  );
 };
 
-const App = (
-  { families, styles, editable: initialEditable, settings }: Props,
-) => {
+const labels: Record<Category, string> = {
+  japanese: 'Japanese',
+  kanji: 'Japanese Kanji',
+  kana: 'Japanese Hiragana',
+  yakumono: 'Japanese Yakumono',
+  number: 'Number',
+  normal: 'Default',
+};
+
+const App = ({
+  families,
+  styles,
+  editable: initialEditable,
+  settings,
+}: Props) => {
   const [editable, setEditable] = useState<boolean>(initialEditable);
-  const [isDetail, setDetail] = useState(settings.fontMode === 'advanced');
+  const [mode, updateMode] = useState<"simple" | "advanced">(settings.fontMode)
   const [fonts, setFonts] = useState<Fonts>(settings.fonts);
 
   const apply = () => {
-    emit<ApplyHandler>(
-      'APPLY',
-      { fonts, fontMode: isDetail ? 'advanced' : 'simple' },
-    );
+    emit<ApplyHandler>('APPLY', {
+      fonts,
+      fontMode: mode
+    });
   };
 
-  useEffect(
-    () => {
-      on<SelectionChangeHandler>(
-        'SELECTION_CHANGE',
-        (nextEditable) => {
-          setEditable(nextEditable);
-        },
-      );
-    },
-    [],
-  );
+  useEffect(() => {
+    on<SelectionChangeHandler>('SELECTION_CHANGE', (nextEditable) => {
+      setEditable(nextEditable);
+    });
+  }, []);
+
+  const categories = mode === 'advanced' ? [
+    'kanji', 'kana', 'yakumono', 'number', 'normal',
+  ] as const : ['japanese', 'normal'] as const;
 
   return (
     <Fragment>
-      {isDetail ?
-        <Fragment key='more'>
-          <Heading>Japanese Kanji</Heading>
-          <FontSelector
-            category='kanji'
-            fontName={fonts.kanji}
-            onChange={setFonts}
-            familyOptions={families}
-            styleOptions={styles[fonts.kanji.family] ?? []}
-          />
-          <Heading>Japanese Kana</Heading>
-          <FontSelector
-            category='kana'
-            fontName={fonts.kana}
-            onChange={setFonts}
-            familyOptions={families}
-            styleOptions={styles[fonts.kana.family] ?? []}
-          />
-          <Heading>Japanese Yakumono</Heading>
-          <FontSelector
-            category='yakumono'
-            fontName={fonts.yakumono}
-            onChange={setFonts}
-            familyOptions={families}
-            styleOptions={styles[fonts.yakumono.family] ?? []}
-          />
-          <Heading>Number</Heading>
-          <FontSelector
-            category='number'
-            fontName={fonts.number}
-            onChange={setFonts}
-            familyOptions={families}
-            styleOptions={styles[fonts.number.family] ?? []}
-          />
-        </Fragment>
-        :
-        <Fragment key='simple'>
-          <Heading>Japanese</Heading>
-          <FontSelector
-            category='japanese'
-            fontName={fonts.japanese}
-            onChange={setFonts}
-            familyOptions={families}
-            styleOptions={styles[fonts.japanese.family] ?? []}
-          />
-        </Fragment>
-      }
-      <Heading>Default</Heading>
-      <FontSelector
-        category='normal'
-        fontName={fonts.normal}
-        onChange={setFonts}
-        familyOptions={families}
-        styleOptions={styles[fonts.normal.family] ?? []}
-      />
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, backgroundColor: 'var(--figma-color-bg)' }}>
+      {categories.map((category) => {
+        return (
+          <Fragment key={category}>
+            <Heading>{labels[category]}</Heading>
+            <FontSelector
+              category={category}
+              fontName={fonts[category]}
+              onChange={setFonts}
+              familyOptions={families}
+              styleOptions={styles[fonts[category].family] ?? []}
+            />
+          </Fragment>
+        );
+      })}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: 'var(--figma-color-bg)',
+        }}
+      >
         <Divider />
-        <div style={{ padding: 8, display: 'flex', alignItems: 'center', width: '100%' }}>
+        <div
+          style={{
+            padding: 8,
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
           <div style={{ marginLeft: 4, marginRight: 'auto' }}>
-            <Checkbox value={isDetail} onChange={(val) => { setDetail(val) }} label={"Detail settings"} />
+            <Checkbox
+              value={mode === 'advanced'}
+              onChange={(val) => {
+                updateMode(val ? 'advanced' : 'simple')
+              }}
+              label={'Detail settings'}
+            />
           </div>
           <Button disabled={!editable} onClick={apply}>Apply</Button>
         </div>
