@@ -58,7 +58,6 @@ const FontSelector = (
     onChange,
     familyOptions,
     styleOptions,
-    top,
   } = props;
   const { family, style } = fontName;
 
@@ -75,7 +74,7 @@ const FontSelector = (
 
   return <Container space='extraSmall' style={{ display: 'flex' }}>
     <div style={{ minWidth: '60%' }}>
-      <FilterInput options={familyOptions} initialValue={family} onChange={onChangeFaimly} top={top} />
+      <FilterInput options={familyOptions} initialValue={family} onChange={onChangeFaimly} />
     </div>
     <MyDropdown options={styleOptions} value={style} onChange={onChangeStyle} />
   </Container>;
@@ -142,7 +141,6 @@ const App = (
             onChange={setFonts}
             familyOptions={families}
             styleOptions={styles[fonts.number.family] ?? []}
-            top
           />
         </Fragment>
         :
@@ -164,7 +162,6 @@ const App = (
         onChange={setFonts}
         familyOptions={families}
         styleOptions={styles[fonts.normal.family] ?? []}
-        top={isDetail}
       />
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, backgroundColor: 'var(--figma-color-bg)' }}>
         <Divider />
