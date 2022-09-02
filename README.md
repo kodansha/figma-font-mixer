@@ -1,9 +1,10 @@
-# Figma Font Mixer
+# Japanese Font Mixer
 
  [![Figma Plugin](https://img.shields.io/badge/figma-Font%20Mixer-green?cacheSeconds=1800)](https://www.figma.com/community/plugin/1119612117220702803)
 
- 日本語とそれ以外のテキストに別々のフォントを設定しわけるプラグインです。
- Illustratorの合成フォント機能から着想を得ました。
+ 日本語とそれ以外のテキストにそれぞれフォントを設定できるFigmaプラグインです。
+
+ 簡易モードでは日本語とそれ以外にフォントをそれぞれ設定できます。詳細モードでは漢字・かな・約物・数字・その他にそれぞれ別のフォントを設定できます。
 
 ## Development guide
 
