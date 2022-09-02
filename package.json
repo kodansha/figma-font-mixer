@@ -1,7 +1,7 @@
 {
   "name": "font-mixer",
   "version": "1.0.0",
-  "description": "Your Figma Plugin",
+  "description": "Figma plugin for japanese typography",
   "main": "build/main.js",
   "scripts": {
     "build": "build-figma-plugin --typecheck --minify",
@@ -9,8 +9,8 @@
     "test": "jest",
     "format": "rome format src --indent-style space --quote-style single --write"
   },
-  "author": "",
-  "license": "",
+  "author": "KODANSHAtech LLC.",
+  "license": "MIT",
   "devDependencies": {
     "@create-figma-plugin/build": "^2.1.3",
     "@create-figma-plugin/tsconfig": "^2.1.3",
