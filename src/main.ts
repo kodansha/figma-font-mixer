@@ -7,6 +7,7 @@ import {
   loadSettingsAsync,
 } from '@create-figma-plugin/utilities';
 import { Settings, ApplyHandler, SelectionChangeHandler, Category } from './types';
+import { UIProps } from './ui';
 import { sortStyles, regexps, defaultSettings } from './utils';
 
 const mapToObject = (map: Map<string, string[]>): Record<string, string[]> =>
@@ -22,7 +23,7 @@ export default async () => {
   const availableFonts = await figma.listAvailableFontsAsync();
   const fontNames = availableFonts.map((font) => font.fontName);
 
-  const families = new Set();
+  const families = new Set<string>();
   const styleMap = new Map<string, string[]>();
   fontNames.forEach((font) => {
     families.add(font.family);
@@ -33,21 +34,21 @@ export default async () => {
     }
   },);
 
-  const styles = mapToObject(styleMap);
-  Object.keys(styles).map((key) => {
-    const values = styles[key];
-    styles[key] = sortStyles(values);
+  const familyStyles = mapToObject(styleMap);
+  Object.keys(familyStyles).map((key) => {
+    const values = familyStyles[key];
+    familyStyles[key] = sortStyles(values);
   },);
 
   const settings = await loadSettingsAsync(defaultSettings, 'fonts');
   const data = {
     families: Array.from(families),
     editable: isSelectedTextNode(),
-    styles,
+    familyStyles,
     settings,
   };
 
-  showUI(
+  showUI<UIProps>(
     {
       width: 300,
       height: 420,

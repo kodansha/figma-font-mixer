@@ -21,9 +21,9 @@ import {
   SelectionChangeHandler,
 } from './types';
 
-type Props = {
+export type UIProps = {
   families: string[];
-  styles: Record<string, string[]>;
+  familyStyles: Record<string, string[]>;
   editable: boolean;
   settings: Settings;
 };
@@ -93,10 +93,10 @@ const labels: Record<Category, string> = {
 
 const App = ({
   families,
-  styles,
+  familyStyles,
   editable: initialEditable,
   settings,
-}: Props) => {
+}: UIProps) => {
   const [editable, setEditable] = useState<boolean>(initialEditable);
   const [mode, updateMode] = useState<"simple" | "advanced">(settings.fontMode)
   const [fonts, setFonts] = useState<Fonts>(settings.fonts);
@@ -129,7 +129,7 @@ const App = ({
               fontName={fonts[category]}
               onChange={setFonts}
               familyOptions={families}
-              styleOptions={styles[fonts[category].family] ?? []}
+              styleOptions={familyStyles[fonts[category].family] ?? []}
             />
           </Fragment>
         );
