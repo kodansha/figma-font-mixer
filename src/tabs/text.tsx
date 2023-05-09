@@ -9,20 +9,18 @@ import {
   VerticalSpace,
   Text,
   Bold,
-  Tabs,
-  TabsOption,
+  IconPlus32,
 } from '@create-figma-plugin/ui';
-import { FilterInput } from './components/filter-input';
-import { MyDropdown } from './components/dropdown';
-import { Checkbox } from './components/checkbox';
+import { FilterInput } from '../components/filter-input';
+import { MyDropdown } from '../components/dropdown';
+import { Checkbox } from '../components/checkbox';
 import {
   Fonts,
   Category,
   Settings,
   ApplyHandler,
   SelectionChangeHandler,
-} from './types';
-import { TextTab } from './tabs/text';
+} from '../types';
 
 export type UIProps = {
   families: string[];
@@ -94,7 +92,7 @@ const labels: Record<Category, string> = {
   normal: 'Default',
 };
 
-const App = ({
+export const TextTab = ({
   families,
   familyStyles,
   editable: initialEditable,
@@ -121,28 +119,56 @@ const App = ({
     'kanji', 'kana', 'yakumono', 'number', 'normal',
   ] as const : ['japanese', 'normal'] as const;
 
-  const tabOptions: TabsOption[] = [
-    {
-      children: <TextTab
-        families={families}
-        familyStyles={familyStyles}
-        editable={editable}
-        settings={settings}
-      />, value: 'Text'
-    },
-    {
-      children: <div>Text Styles</div>, value: 'Text Styles'
-    }
-  ]
-
-  const [tab, setTab] = useState<string>(tabOptions[0].value)
-  const handleTabChange = (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
-    const newValue = event.currentTarget.value as any
-    setTab(newValue)
-  }
-  return <Tabs options={tabOptions} value={tab} onChange={handleTabChange} />
-
+  return (
+    <Fragment>
+      <IconPlus32 onClick={() => {
+        const name = ''
+        console.log({ name, mode, fonts })
+      }} />
+      {categories.map((category) => {
+        return (
+          <Fragment key={category}>
+            <Heading>{labels[category]}</Heading>
+            <FontSelector
+              category={category}
+              fontName={fonts[category]}
+              onChange={setFonts}
+              familyOptions={families}
+              styleOptions={familyStyles[fonts[category].family] ?? []}
+            />
+          </Fragment>
+        );
+      })}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: 'var(--figma-color-bg)',
+        }}
+      >
+        <Divider />
+        <div
+          style={{
+            padding: 8,
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
+          <div style={{ marginLeft: 4, marginRight: 'auto' }}>
+            <Checkbox
+              value={mode === 'advanced'}
+              onChange={(val) => {
+                updateMode(val ? 'advanced' : 'simple')
+              }}
+              label={'Detail settings'}
+            />
+          </div>
+          <Button disabled={!editable} onClick={apply}>Apply</Button>
+        </div>
+      </div>
+    </Fragment>
   );
 };
-
-export default render(App);
