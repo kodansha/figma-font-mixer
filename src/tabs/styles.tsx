@@ -1,124 +1,57 @@
-import { Fragment, h } from 'preact';
-import { useState, useEffect, StateUpdater } from 'preact/hooks';
-import { emit, on } from '@create-figma-plugin/utilities';
-import {
-  Button,
-  Container,
-  Divider,
-  render,
-  VerticalSpace,
-  Text,
-  Bold,
-  IconPlus32,
-  Modal,
-  Textbox,
-  IconTrash32,
-  IconButton,
-} from '@create-figma-plugin/ui';
-import { FilterInput } from '../components/filter-input';
-import { MyDropdown } from '../components/dropdown';
-import { Checkbox } from '../components/checkbox';
-import {
-  Fonts,
-  Category,
-  Settings,
-  ApplyHandler,
-  SelectionChangeHandler,
-  SaveStyleHandler,
-  DeleteStyleHandler,
-} from '../types';
+import { h } from 'preact';
+import { emit } from '@create-figma-plugin/utilities';
+import { IconTrash32, IconButton } from '@create-figma-plugin/ui';
+import { ApplyHandler, DeleteStyleHandler, Style } from '../types';
+import cssStyles from './styles.module.css'
 
-export type UIProps = {
-  families: string[];
-  familyStyles: Record<string, string[]>;
-  editable: boolean;
-  settings: Settings;
-};
-
-const Heading = (props: {
-  children: string;
-}) => {
-  return (
-    <Fragment>
-      <VerticalSpace space="large" />
-      <Container space='medium'>
-        <Text><Bold>{props.children}</Bold></Text>
-      </Container>
-      <VerticalSpace space="small" />
-    </Fragment>
-  );
-};
-
-const FontSelector = (props: {
-  category: Category;
-  fontName: FontName;
-  onChange: StateUpdater<Fonts>;
-  familyOptions: string[];
-  styleOptions: string[];
-  top?: boolean;
-}) => {
-  const { category, fontName, onChange, familyOptions, styleOptions } = props;
-  const { family, style } = fontName;
-
-  const onChangeFaimly = (next: string) => {
-    onChange(
-      (prev) => ({ ...prev, [category]: { ...prev[category], family: next } }),
-    );
-  };
-  const onChangeStyle = (next: string) => {
-    onChange(
-      (prev) => ({ ...prev, [category]: { ...prev[category], style: next } }),
-    );
-  };
-
-  return (
-    <Container space='extraSmall' style={{ display: 'flex' }}>
-      <div style={{ minWidth: '60%' }}>
-        <FilterInput
-          options={familyOptions}
-          initialValue={family}
-          onChange={onChangeFaimly}
-        />
-      </div>
-      <MyDropdown
-        options={styleOptions}
-        value={style}
-        onChange={onChangeStyle}
-      />
-    </Container>
-  );
-};
-
-const labels: Record<Category, string> = {
-  japanese: 'Japanese',
-  kanji: 'Japanese Kanji',
-  kana: 'Japanese Hiragana',
-  yakumono: 'Japanese Yakumono',
-  number: 'Number',
-  normal: 'Default',
-};
+const readableText = (style: Style) => {
+  const { fonts, fontMode } = style;
+  if (fontMode === 'simple') {
+    return [
+      fonts['japanese'].family + ' ' + fonts['japanese'].style,
+      fonts['normal'].family + ' ' + fonts['normal'].style
+    ].filter((v, i, a) => a.indexOf(v) === i).join(', ')
+  } else if (fontMode === 'advanced') {
+    return [
+      fonts['kanji'].family,
+      fonts['kana'].family,
+      fonts['yakumono'].family,
+      fonts['number'].family,
+      fonts['normal'].family,
+    ].filter((v, i, a) => a.indexOf(v) === i).join(', ')
+  }
+}
 
 export const StylesTab = ({ styles }: any) => {
   return (
-    <Fragment>
+    <div style={{ padding: '8px 0' }}>
       {styles.map((style: any, index: number) => {
-        return <div onClick={() => {
-          console.log('ciicked', style)
-          emit<ApplyHandler>('APPLY', {
-            fonts: style.fonts,
-            fontMode: style.fontMode,
-          });
-        }}>
-          {style.name}
-          <small>{JSON.stringify(style.fonts, null, 2)}</small>
-          <IconButton onClick={(e) => {
-            e.stopPropagation();
-            emit<DeleteStyleHandler>('DELETE_STYLE', index);
-          }}>
+        const familyText = readableText(style);
+        return <div
+          title={`${style.name} - ${familyText}`}
+          className={cssStyles.row}
+          onClick={() => {
+            console.log('ciicked', style)
+            emit<ApplyHandler>('APPLY', {
+              fonts: style.fonts,
+              fontMode: style.fontMode,
+            });
+          }}
+        >
+          <span className={cssStyles.name}>{style.name}
+            <span style={{ marginLeft: 4, opacity: 0.6 }}>- {familyText}</span>
+          </span>
+          <div className={cssStyles.deleteButton}>
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                emit<DeleteStyleHandler>('DELETE_STYLE', index);
+              }}>
             <IconTrash32 />
           </IconButton>
+          </div>
         </div>
       })}
-    </Fragment>
+    </div>
   );
 };

@@ -12,6 +12,7 @@ import {
   IconPlus32,
   Modal,
   Textbox,
+  IconButton,
 } from '@create-figma-plugin/ui';
 import { FilterInput } from '../components/filter-input';
 import { MyDropdown } from '../components/dropdown';
@@ -127,12 +128,19 @@ export const TextTab = ({
 
   return (
     <Fragment>
-      <Modal open={isOpen} onOverlayClick={() => setOpen(false)}>
-        <div>
-          <Textbox onInput={(e: h.JSX.TargetedEvent) => {
+      <Modal
+        open={isOpen}
+        onCloseButtonClick={() => setOpen(false)}
+        onOverlayClick={() => setOpen(false)}
+        title="Create new text style"
+      >
+        <Container space="small" style={{ width: 240 }}>
+          <VerticalSpace space="small" />
+          <Textbox placeholder='Style name' onInput={(e: h.JSX.TargetedEvent) => {
             const newValue = (e.currentTarget as any).value
             setName(newValue)
-          }} value={name} />
+          }} value={name} variant="border" />
+          <VerticalSpace space="extraSmall" />
           <Button onClick={() => {
             console.log({ name, mode, fonts })
             // ここでemit
@@ -144,13 +152,21 @@ export const TextTab = ({
             setOpen(false)
             setName('')
           }}>Save styles</Button>
-        </div>
+          <VerticalSpace space="small" />
+        </Container>
       </Modal>
-      <IconPlus32 onClick={() => {
+      <IconButton style={{
+        position: 'fixed',
+        right: 8,
+        top: 5,
+        zIndex: 1,
+      }} onClick={() => {
         const name = ''
         console.log({ name, mode, fonts })
         setOpen(true)
-      }} />
+        }}>
+        <IconPlus32 />
+      </IconButton>
       {categories.map((category) => {
         return (
           <Fragment key={category}>

@@ -1,0 +1,26 @@
+.row {
+  display: flex;
+  align-items: center;
+  padding: 0 8px 0 16px;
+}
+
+.row:hover {
+  background-color: var(--figma-color-bg-secondary);
+}
+
+.name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.deleteButton {
+  margin-left: auto;
+  opacity: 0;
+  width: 0;
+}
+
+.row:hover .deleteButton {
+  opacity: 1;
+  width: auto;
+}
