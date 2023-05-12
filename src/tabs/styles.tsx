@@ -12,6 +12,8 @@ import {
   IconPlus32,
   Modal,
   Textbox,
+  IconTrash32,
+  IconButton,
 } from '@create-figma-plugin/ui';
 import { FilterInput } from '../components/filter-input';
 import { MyDropdown } from '../components/dropdown';
@@ -23,6 +25,7 @@ import {
   ApplyHandler,
   SelectionChangeHandler,
   SaveStyleHandler,
+  DeleteStyleHandler,
 } from '../types';
 
 export type UIProps = {
@@ -98,7 +101,24 @@ const labels: Record<Category, string> = {
 export const StylesTab = ({ styles }: any) => {
   return (
     <Fragment>
-      {JSON.stringify(styles, null, 2)}
+      {styles.map((style: any, index: number) => {
+        return <div onClick={() => {
+          console.log('ciicked', style)
+          emit<ApplyHandler>('APPLY', {
+            fonts: style.fonts,
+            fontMode: style.fontMode,
+          });
+        }}>
+          {style.name}
+          <small>{JSON.stringify(style.fonts, null, 2)}</small>
+          <IconButton onClick={(e) => {
+            e.stopPropagation();
+            emit<DeleteStyleHandler>('DELETE_STYLE', index);
+          }}>
+            <IconTrash32 />
+          </IconButton>
+        </div>
+      })}
     </Fragment>
   );
 };

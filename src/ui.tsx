@@ -21,6 +21,8 @@ import {
   Settings,
   ApplyHandler,
   SelectionChangeHandler,
+  StylesChangeHandler,
+  Style,
 } from './types';
 import { TextTab } from './tabs/text';
 import { StylesTab } from './tabs/styles';
@@ -101,11 +103,12 @@ const App = ({
   familyStyles,
   editable: initialEditable,
   settings,
-  styles,
+  styles: initialStyles,
 }: UIProps) => {
   const [editable, setEditable] = useState<boolean>(initialEditable);
   const [mode, updateMode] = useState<"simple" | "advanced">(settings.fontMode)
   const [fonts, setFonts] = useState<Fonts>(settings.fonts);
+  const [styles, setStyles] = useState<Style[]>(initialStyles);
 
   const apply = () => {
     emit<ApplyHandler>('APPLY', {
@@ -119,7 +122,9 @@ const App = ({
       setEditable(nextEditable);
     });
 
-    // STYLES_CHANGE
+    on<StylesChangeHandler>('STYLES_CHANGE', (nextStyles) => {
+      setStyles(nextStyles);
+    });
   }, []);
 
   const categories = mode === 'advanced' ? [

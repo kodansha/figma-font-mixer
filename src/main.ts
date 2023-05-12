@@ -6,7 +6,7 @@ import {
   saveSettingsAsync,
   loadSettingsAsync,
 } from '@create-figma-plugin/utilities';
-import { Settings, ApplyHandler, SelectionChangeHandler, Category, SaveStyleHandler } from './types';
+import { Settings, ApplyHandler, SelectionChangeHandler, Category, SaveStyleHandler, DeleteStyleHandler, StylesChangeHandler } from './types';
 import { UIProps } from './ui';
 import { sortStyles, regexps, defaultSettings } from './utils';
 
@@ -66,19 +66,35 @@ export default async () => {
     },
   );
 
+  const loadStyles = async () => {
+    const { styles } = await loadSettingsAsync({
+      styles: []
+    }, 'experimetal_styles');
+    return styles
+  }
+
   on<SaveStyleHandler>(
     'SAVE_STYLE',
     async (data) => {
       const { fonts, fontMode, name } = data;
       console.log(fonts, fontMode, name);
-      const { styles } = await loadSettingsAsync({
-        styles: []
-      }, 'experimetal_styles');
+      const styles = await loadStyles();
       const newStyles = [...styles, { fonts, fontMode, name }];
-      console.log('newStyles', newStyles)
       saveSettingsAsync({
         styles: newStyles
       }, 'experimetal_styles');
+      emit<StylesChangeHandler>('STYLES_CHANGE', newStyles);
+    }
+  )
+
+  on<DeleteStyleHandler>(
+    'DELETE_STYLE', async (index: number) => {
+      const styles = await loadStyles();
+      const newStyles = styles.filter((_, i) => i !== index);
+      saveSettingsAsync({
+        styles: newStyles
+      }, 'experimetal_styles');
+      emit<StylesChangeHandler>('STYLES_CHANGE', newStyles);
     }
   )
 
