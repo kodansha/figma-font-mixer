@@ -6,7 +6,8 @@ import {
   saveSettingsAsync,
   loadSettingsAsync,
 } from '@create-figma-plugin/utilities';
-import { Settings, ApplyHandler, SelectionChangeHandler, Category, SaveStyleHandler, DeleteStyleHandler, StylesChangeHandler } from './types';
+import { loadStyles, saveStyles } from './styles-data';
+import { Settings, ApplyHandler, SelectionChangeHandler, Category, SaveStyleHandler, DeleteStyleHandler, StylesChangeHandler, Fonts, FontMode, SavedFonts } from './types';
 import { UIProps } from './ui';
 import { sortStyles, regexps, defaultSettings } from './utils';
 
@@ -46,9 +47,7 @@ export default async () => {
     editable: isSelectedTextNode(),
     familyStyles,
     settings,
-    styles: (await loadSettingsAsync({
-      styles: []
-    }, 'experimetal_styles')).styles
+    styles: loadStyles(),
   };
 
   showUI<UIProps>(
@@ -66,11 +65,12 @@ export default async () => {
     },
   );
 
-  const loadStyles = async () => {
-    const { styles } = await loadSettingsAsync({
-      styles: []
-    }, 'experimetal_styles');
-    return styles
+  const pickData = (fonts: Fonts, fontMode: FontMode): SavedFonts => {
+    const { japanese, kanji, kana, yakumono, number, normal } = fonts
+    if (fontMode === 'simple') return { japanese, normal }
+    return {
+      kanji, kana, yakumono, number, normal
+    }
   }
 
   on<SaveStyleHandler>(
@@ -78,22 +78,19 @@ export default async () => {
     async (data) => {
       const { fonts, fontMode, name } = data;
       console.log(fonts, fontMode, name);
-      const styles = await loadStyles();
-      const newStyles = [...styles, { fonts, fontMode, name: name || 'Style' }];
-      saveSettingsAsync({
-        styles: newStyles
-      }, 'experimetal_styles');
+      const styles = loadStyles();
+      const newStyle = { fonts: pickData(fonts, fontMode), fontMode, name: name || 'Style' }
+      const newStyles = [...styles, newStyle];
+      saveStyles(newStyles);
       emit<StylesChangeHandler>('STYLES_CHANGE', newStyles);
     }
   )
 
   on<DeleteStyleHandler>(
     'DELETE_STYLE', async (index: number) => {
-      const styles = await loadStyles();
+      const styles = loadStyles();
       const newStyles = styles.filter((_, i) => i !== index);
-      saveSettingsAsync({
-        styles: newStyles
-      }, 'experimetal_styles');
+      saveStyles(newStyles)
       emit<StylesChangeHandler>('STYLES_CHANGE', newStyles);
     }
   )
@@ -101,7 +98,7 @@ export default async () => {
   on<ApplyHandler>(
     'APPLY',
     async (data) => {
-      const { fonts, fontMode } = data;
+      const { fonts, fontMode, saveSettings = false } = data;
 
       if (!isSelectedTextNode()) {
         return;
@@ -121,7 +118,7 @@ export default async () => {
       };
 
       const settings: Settings = { fonts, fontMode };
-      await saveSettingsAsync(settings, 'fonts');
+      if (saveSettings) await saveSettingsAsync(settings, 'fonts');
 
       figma.currentPage.selection.filter(
         (node): node is TextNode => node.type === 'TEXT',

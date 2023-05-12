@@ -109,7 +109,8 @@ export const TextTab = ({
   const apply = () => {
     emit<ApplyHandler>('APPLY', {
       fonts,
-      fontMode: mode
+      fontMode: mode,
+      saveSettings: true
     });
   };
 
@@ -136,13 +137,7 @@ export const TextTab = ({
       >
         <Container space="small" style={{ width: 240 }}>
           <VerticalSpace space="small" />
-          <Textbox placeholder='Style name' onInput={(e: h.JSX.TargetedEvent) => {
-            const newValue = (e.currentTarget as any).value
-            setName(newValue)
-          }} value={name} variant="border" />
-          <VerticalSpace space="extraSmall" />
-          <Button onClick={() => {
-            console.log({ name, mode, fonts })
+          <form style={{ margin: 0 }} onSubmit={(e) => {
             // ここでemit
             emit<SaveStyleHandler>('SAVE_STYLE', {
               name,
@@ -151,7 +146,15 @@ export const TextTab = ({
             })
             setOpen(false)
             setName('')
-          }}>Save styles</Button>
+            e.preventDefault();
+          }}>
+            <Textbox placeholder='Style name' onInput={(e: h.JSX.TargetedEvent) => {
+              const newValue = (e.currentTarget as any).value
+              setName(newValue)
+            }} value={name} variant="border" />
+            <VerticalSpace space="extraSmall" />
+            <Button type='submit'>Save styles</Button>
+          </form>
           <VerticalSpace space="small" />
         </Container>
       </Modal>
@@ -169,6 +172,7 @@ export const TextTab = ({
       </IconButton>
       <div style={{ paddingBottom: 48 + 16 }}>
         {categories.map((category) => {
+          // console.log({ category, fonts: fonts[category] })
           return (
             <Fragment key={category}>
               <Heading>{labels[category]}</Heading>

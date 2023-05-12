@@ -1,18 +1,17 @@
 import { EventHandler } from '@create-figma-plugin/utilities';
 
-export type Category =
-  | 'japanese'
-  | 'kanji'
-  | 'kana'
-  | 'yakumono'
-  | 'number'
-  | 'normal';
+export type SimpleCategory = 'normal' | 'japanese';
+export type AdvancedCategory = 'kanji' | 'kana' | 'yakumono' | 'number' | 'normal';
+export type Category = SimpleCategory | AdvancedCategory;
 export type Fonts = Record<Category, FontName>;
+export type SavedFonts =
+  Record<SimpleCategory, FontName> |
+  Record<AdvancedCategory, FontName>;
 
-type FontMode = 'simple' | 'advanced';
+export type FontMode = 'simple' | 'advanced';
 
 export type Style = {
-  fonts: Fonts;
+  fonts: SavedFonts;
   fontMode: FontMode;
   name: string;
 }
@@ -28,6 +27,7 @@ export interface ApplyHandler extends EventHandler {
     data: {
       fonts: Fonts;
       fontMode: FontMode;
+      saveSettings?: boolean;
     },
   ) => void;
 }
@@ -35,7 +35,11 @@ export interface ApplyHandler extends EventHandler {
 export interface SaveStyleHandler extends EventHandler {
   name: 'SAVE_STYLE';
   handler: (
-    data: Style
+    data: {
+      fonts: Fonts;
+      fontMode: FontMode;
+      name: string;
+    }
   ) => void;
 }
 

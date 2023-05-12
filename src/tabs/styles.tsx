@@ -1,17 +1,19 @@
 import { h } from 'preact';
 import { emit } from '@create-figma-plugin/utilities';
-import { IconTrash32, IconButton } from '@create-figma-plugin/ui';
-import { ApplyHandler, DeleteStyleHandler, Style } from '../types';
+import { IconTrash32, IconButton, Container, VerticalSpace, Text, Muted } from '@create-figma-plugin/ui';
+import { AdvancedCategory, ApplyHandler, DeleteStyleHandler, SimpleCategory, Style } from '../types';
 import cssStyles from './styles.module.css'
 
 const readableText = (style: Style) => {
-  const { fonts, fontMode } = style;
+  const { fonts: _fonts, fontMode } = style;
   if (fontMode === 'simple') {
+    const fonts = _fonts as Record<SimpleCategory, FontName>;
     return [
       fonts['japanese'].family + ' ' + fonts['japanese'].style,
       fonts['normal'].family + ' ' + fonts['normal'].style
     ].filter((v, i, a) => a.indexOf(v) === i).join(', ')
   } else if (fontMode === 'advanced') {
+    const fonts = _fonts as Record<AdvancedCategory, FontName>;
     return [
       fonts['kanji'].family,
       fonts['kana'].family,
@@ -25,6 +27,10 @@ const readableText = (style: Style) => {
 export const StylesTab = ({ styles }: any) => {
   return (
     <div style={{ padding: '8px 0' }}>
+      {styles.length === 0 && <Container space='medium'>
+        <VerticalSpace space='small' />
+        <Text><Muted>There is no styles</Muted></Text>
+      </Container>}
       {styles.map((style: any, index: number) => {
         const familyText = readableText(style);
         return <div

@@ -45,7 +45,7 @@ const App = ({
       />, value: 'Text'
     },
     {
-      children: <StylesTab styles={styles} />, value: 'Styles'
+      children: <StylesTab styles={styles} />, value: 'Styles(Beta)'
     }
   ]
 
