@@ -9,28 +9,27 @@ import {
   VerticalSpace,
   Text,
   Bold,
-  Tabs,
-  TabsOption,
+  IconPlus32,
+  Modal,
+  Textbox,
 } from '@create-figma-plugin/ui';
-import { FilterInput } from './components/filter-input';
-import { MyDropdown } from './components/dropdown';
-import { Checkbox } from './components/checkbox';
+import { FilterInput } from '../components/filter-input';
+import { MyDropdown } from '../components/dropdown';
+import { Checkbox } from '../components/checkbox';
 import {
   Fonts,
   Category,
   Settings,
   ApplyHandler,
   SelectionChangeHandler,
-} from './types';
-import { TextTab } from './tabs/text';
-import { StylesTab } from './tabs/styles';
+  SaveStyleHandler,
+} from '../types';
 
 export type UIProps = {
   families: string[];
   familyStyles: Record<string, string[]>;
   editable: boolean;
   settings: Settings;
-  styles: any[]
 };
 
 const Heading = (props: {
@@ -96,57 +95,10 @@ const labels: Record<Category, string> = {
   normal: 'Default',
 };
 
-const App = ({
-  families,
-  familyStyles,
-  editable: initialEditable,
-  settings,
-  styles,
-}: UIProps) => {
-  const [editable, setEditable] = useState<boolean>(initialEditable);
-  const [mode, updateMode] = useState<"simple" | "advanced">(settings.fontMode)
-  const [fonts, setFonts] = useState<Fonts>(settings.fonts);
-
-  const apply = () => {
-    emit<ApplyHandler>('APPLY', {
-      fonts,
-      fontMode: mode
-    });
-  };
-
-  useEffect(() => {
-    on<SelectionChangeHandler>('SELECTION_CHANGE', (nextEditable) => {
-      setEditable(nextEditable);
-    });
-
-    // STYLES_CHANGE
-  }, []);
-
-  const categories = mode === 'advanced' ? [
-    'kanji', 'kana', 'yakumono', 'number', 'normal',
-  ] as const : ['japanese', 'normal'] as const;
-
-  const tabOptions: TabsOption[] = [
-    {
-      children: <TextTab
-        families={families}
-        familyStyles={familyStyles}
-        editable={editable}
-        settings={settings}
-      />, value: 'Text'
-    },
-    {
-      children: <StylesTab styles={styles} />, value: 'Styles'
-    }
-  ]
-
-  const [tab, setTab] = useState<string>(tabOptions[0].value)
-  const handleTabChange = (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
-    const newValue = event.currentTarget.value as any
-    setTab(newValue)
-  }
-  console.log(styles)
-  return <Tabs options={tabOptions} value={tab} onChange={handleTabChange} />
+export const StylesTab = ({ styles }: any) => {
+  return (
+    <Fragment>
+      {JSON.stringify(styles, null, 2)}
+    </Fragment>
+  );
 };
-
-export default render(App);

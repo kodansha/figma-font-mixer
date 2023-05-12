@@ -26,6 +26,18 @@ export interface ApplyHandler extends EventHandler {
   ) => void;
 }
 
+export interface SaveStyleHandler extends EventHandler {
+  name: 'SAVE_STYLE';
+  handler: (
+    data: {
+      fonts: Fonts;
+      fontMode: FontMode;
+      name: string;
+    },
+  ) => void;
+}
+
+
 export interface SelectionChangeHandler extends EventHandler {
   name: 'SELECTION_CHANGE';
   handler: (editable: boolean) => void;

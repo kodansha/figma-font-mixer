@@ -10,6 +10,8 @@ import {
   Text,
   Bold,
   IconPlus32,
+  Modal,
+  Textbox,
 } from '@create-figma-plugin/ui';
 import { FilterInput } from '../components/filter-input';
 import { MyDropdown } from '../components/dropdown';
@@ -20,6 +22,7 @@ import {
   Settings,
   ApplyHandler,
   SelectionChangeHandler,
+  SaveStyleHandler,
 } from '../types';
 
 export type UIProps = {
@@ -119,11 +122,34 @@ export const TextTab = ({
     'kanji', 'kana', 'yakumono', 'number', 'normal',
   ] as const : ['japanese', 'normal'] as const;
 
+  const [isOpen, setOpen] = useState(false)
+  const [name, setName] = useState('')
+
   return (
     <Fragment>
+      <Modal open={isOpen} onOverlayClick={() => setOpen(false)}>
+        <div>
+          <Textbox onInput={(e: h.JSX.TargetedEvent) => {
+            const newValue = (e.currentTarget as any).value
+            setName(newValue)
+          }} value={name} />
+          <Button onClick={() => {
+            console.log({ name, mode, fonts })
+            // ここでemit
+            emit<SaveStyleHandler>('SAVE_STYLE', {
+              name,
+              fonts,
+              fontMode: mode
+            })
+            setOpen(false)
+            setName('')
+          }}>Save styles</Button>
+        </div>
+      </Modal>
       <IconPlus32 onClick={() => {
         const name = ''
         console.log({ name, mode, fonts })
+        setOpen(true)
       }} />
       {categories.map((category) => {
         return (

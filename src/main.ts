@@ -6,7 +6,7 @@ import {
   saveSettingsAsync,
   loadSettingsAsync,
 } from '@create-figma-plugin/utilities';
-import { Settings, ApplyHandler, SelectionChangeHandler, Category } from './types';
+import { Settings, ApplyHandler, SelectionChangeHandler, Category, SaveStyleHandler } from './types';
 import { UIProps } from './ui';
 import { sortStyles, regexps, defaultSettings } from './utils';
 
@@ -46,6 +46,9 @@ export default async () => {
     editable: isSelectedTextNode(),
     familyStyles,
     settings,
+    styles: (await loadSettingsAsync({
+      styles: []
+    }, 'experimetal_styles')).styles
   };
 
   showUI<UIProps>(
@@ -62,6 +65,22 @@ export default async () => {
       emit<SelectionChangeHandler>('SELECTION_CHANGE', isSelectedTextNode());
     },
   );
+
+  on<SaveStyleHandler>(
+    'SAVE_STYLE',
+    async (data) => {
+      const { fonts, fontMode, name } = data;
+      console.log(fonts, fontMode, name);
+      const { styles } = await loadSettingsAsync({
+        styles: []
+      }, 'experimetal_styles');
+      const newStyles = [...styles, { fonts, fontMode, name }];
+      console.log('newStyles', newStyles)
+      saveSettingsAsync({
+        styles: newStyles
+      }, 'experimetal_styles');
+    }
+  )
 
   on<ApplyHandler>(
     'APPLY',
