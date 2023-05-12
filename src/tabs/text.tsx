@@ -155,7 +155,7 @@ export const TextTab = ({
           <VerticalSpace space="small" />
         </Container>
       </Modal>
-      <IconButton style={{
+      <IconButton title="Create text style" style={{
         position: 'fixed',
         right: 8,
         top: 5,
@@ -167,26 +167,29 @@ export const TextTab = ({
         }}>
         <IconPlus32 />
       </IconButton>
-      {categories.map((category) => {
-        return (
-          <Fragment key={category}>
-            <Heading>{labels[category]}</Heading>
-            <FontSelector
-              category={category}
-              fontName={fonts[category]}
-              onChange={setFonts}
-              familyOptions={families}
-              styleOptions={familyStyles[fonts[category].family] ?? []}
-            />
-          </Fragment>
-        );
-      })}
+      <div style={{ paddingBottom: 48 + 16 }}>
+        {categories.map((category) => {
+          return (
+            <Fragment key={category}>
+              <Heading>{labels[category]}</Heading>
+              <FontSelector
+                category={category}
+                fontName={fonts[category]}
+                onChange={setFonts}
+                familyOptions={families}
+                styleOptions={familyStyles[fonts[category].family] ?? []}
+              />
+            </Fragment>
+          );
+        })}
+      </div>
       <div
         style={{
           position: 'fixed',
           bottom: 0,
-          left: 0,
           right: 0,
+          left: 0,
+          zIndex: 1,
           backgroundColor: 'var(--figma-color-bg)',
         }}
       >

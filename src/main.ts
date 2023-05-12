@@ -79,7 +79,7 @@ export default async () => {
       const { fonts, fontMode, name } = data;
       console.log(fonts, fontMode, name);
       const styles = await loadStyles();
-      const newStyles = [...styles, { fonts, fontMode, name }];
+      const newStyles = [...styles, { fonts, fontMode, name: name || 'Style' }];
       saveSettingsAsync({
         styles: newStyles
       }, 'experimetal_styles');

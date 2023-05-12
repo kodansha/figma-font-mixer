@@ -5,6 +5,7 @@ import { render, Tabs, TabsOption } from '@create-figma-plugin/ui';
 import { Settings, SelectionChangeHandler, StylesChangeHandler, Style } from './types';
 import { TextTab } from './tabs/text';
 import { StylesTab } from './tabs/styles';
+import '!./global.css'
 
 export type UIProps = {
   families: string[];
