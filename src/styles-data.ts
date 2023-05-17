@@ -1,13 +1,19 @@
 import { Style } from "./types";
 
 const STYLES_KEY = 'styles';
+const VERSION = 1;
 
 export const saveStyles = (styles: Style[]) => {
-  figma.root.setPluginData(STYLES_KEY, JSON.stringify(styles));
+  const data = {
+    version: VERSION,
+    styles,
+  }
+  figma.root.setPluginData(STYLES_KEY, JSON.stringify(data));
 }
 
 export const loadStyles = (): Style[] => {
-  const styles = figma.root.getPluginData(STYLES_KEY);
-  console.log(styles)
-  return styles ? JSON.parse(styles) : [];
+  const rawData = figma.root.getPluginData(STYLES_KEY);
+  if (!rawData) return [];
+  const data = JSON.parse(rawData);
+  return data.styles ?? []
 }
