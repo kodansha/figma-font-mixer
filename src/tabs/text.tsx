@@ -11,7 +11,6 @@ import {
   Bold,
   IconPlus32,
   Modal,
-  Textbox,
   IconButton,
 } from '@create-figma-plugin/ui';
 import { FilterInput } from '../components/filter-input';
@@ -25,6 +24,7 @@ import {
   SelectionChangeHandler,
   SaveStyleHandler,
 } from '../types';
+import { Textbox } from '../components/textbox';
 
 export type UIProps = {
   families: string[];
@@ -151,7 +151,7 @@ export const TextTab = ({
             <Textbox placeholder='Style name' onInput={(e: h.JSX.TargetedEvent) => {
               const newValue = (e.currentTarget as any).value
               setName(newValue)
-            }} value={name} variant="border" />
+            }} value={name} />
             <VerticalSpace space="extraSmall" />
             <Button type='submit'>Save styles</Button>
           </form>
