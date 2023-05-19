@@ -50,10 +50,7 @@ const styleMapping: Record<string, number> = {
 export const sortStyles = (styles: string[]) => {
   const sorted = styles
     .map((style) => {
-      const match = Object.keys(styleMapping).find(
-        (pattern) => style.includes(pattern),
-      );
-      const weight = match ? styleMapping[match] : 400;
+      const weight = getFontWeight(style);
       const italic = style.includes('Italic');
       return { label: style, weight, italic };
     },)
@@ -63,6 +60,14 @@ export const sortStyles = (styles: string[]) => {
     )
     .map(({ label }) => label);
   return sorted;
+};
+
+export const getFontWeight = (style: string): number => {
+  const match = Object.keys(styleMapping).find(
+    (pattern) => style.includes(pattern),
+  );
+  const weight = match ? styleMapping[match] : 400;
+  return weight;
 };
 
 export const regexps: Record<Exclude<Category, 'normal'>, RegExp> = {
