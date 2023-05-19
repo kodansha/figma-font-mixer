@@ -90,19 +90,36 @@ export default async () => {
 
       figma.currentPage.selection.filter(
         (node): node is TextNode => node.type === 'TEXT',
-      ).forEach((node) => {
-        node.fontName = normal;
+      ).forEach(async (node) => {
+        let start = 0;
+        let end = node.characters.length;
+        let characters = node.characters;
+
+        // 部分選択の場合は選択された部分のみに適用する
+        const selectedTextRange = figma.currentPage.selectedTextRange
+        if (selectedTextRange && selectedTextRange.node.id === node.id && selectedTextRange.start !== selectedTextRange.end) {
+          start = selectedTextRange.start;
+          end = selectedTextRange.end;
+          characters = node.characters.substring(start, end);
+
+          const currentFonts = node.getRangeAllFontNames(0, node.characters.length)
+          for (let i = 0; i < currentFonts.length; i++) {
+            await figma.loadFontAsync(currentFonts[i]);
+          }
+          node.setRangeFontName(start, end, normal)
+        } else {
+          node.fontName = normal;
+        }
+
         (Object.keys(categories) as (keyof typeof categories)[]).forEach((categoryKey) => {
           const regexp = regexps[categoryKey];
-          const matches = node.characters.matchAll(regexp);
+          const matches = characters.matchAll(regexp);
           const fontName = categories[categoryKey];
           if (!fontName) return;
           for (const match of matches) {
-            node.setRangeFontName(
-              (match.index || 0),
-              (match.index || 0) + match[0].length,
-              fontName,
-            );
+            // console.log('match', match[0])
+            const startIndex = start + (match.index || 0)
+            node.setRangeFontName(startIndex, startIndex + match[0].length, fontName,);
           }
         },);
         setRelaunchButton(node, 'openPlugin');
