@@ -1,0 +1,7 @@
+/* WORKAROUND: tabs */
+#create-figma-plugin>div:first-child {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--figma-color-bg);
+}
