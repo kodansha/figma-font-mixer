@@ -63,11 +63,13 @@ export const sortStyles = (styles: string[]) => {
 };
 
 export const getFontWeight = (style: string): number => {
-  const match = Object.keys(styleMapping).find(
-    (pattern) => style.includes(pattern),
+  const matches = Object.keys(styleMapping).filter(
+    (pattern) => style.replace(/ /, '').includes(pattern),
   );
+  // 一番長いマッチを採用する、SemiBoldとBoldであればSemiBoldを採用する
+  const match = matches.reduce((a, b) => a.length > b.length ? a : b, "");
   const weight = match ? styleMapping[match] : 400;
-  return weight;
+  return weight
 };
 
 export const regexps: Record<Exclude<Category, 'normal'>, RegExp> = {

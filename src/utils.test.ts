@@ -13,6 +13,15 @@ describe(
     );
 
     it(
+      '空白付きのスタイルも適切な太さ順に並ぶ',
+      () => {
+        const input = ['Extra Bold', 'Bold', 'Regular', 'Semi Bold'];
+        const output = ['Regular', 'Semi Bold', 'Bold', 'Extra Bold'];
+        expect(sortStyles(input)).toStrictEqual(output);
+      },
+    );
+
+    it(
       '斜体（Italic）が含まれる場合、斜体ではないスタイルのあとに並ぶ',
       () => {
         const input = ['Bold', 'Regular', 'Heavy Italic', 'Light Italic'];
