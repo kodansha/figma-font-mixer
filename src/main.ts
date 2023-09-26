@@ -6,7 +6,8 @@ import {
   saveSettingsAsync,
   loadSettingsAsync,
 } from '@create-figma-plugin/utilities';
-import { Settings, ApplyHandler, SelectionChangeHandler, Category } from './types';
+import { loadStyles, saveStyles } from './styles-data';
+import { Settings, ApplyHandler, SelectionChangeHandler, Category, SaveStyleHandler, DeleteStyleHandler, StylesChangeHandler, Fonts, FontMode, SavedFonts } from './types';
 import { UIProps } from './ui';
 import { sortStyles, regexps, defaultSettings } from './utils';
 
@@ -46,6 +47,7 @@ export default async () => {
     editable: isSelectedTextNode(),
     familyStyles,
     settings,
+    styles: loadStyles(),
   };
 
   showUI<UIProps>(
@@ -63,10 +65,40 @@ export default async () => {
     },
   );
 
+  const pickData = (fonts: Fonts, fontMode: FontMode): SavedFonts => {
+    const { japanese, kanji, kana, yakumono, number, normal } = fonts
+    if (fontMode === 'simple') return { japanese, normal }
+    return {
+      kanji, kana, yakumono, number, normal
+    }
+  }
+
+  on<SaveStyleHandler>(
+    'SAVE_STYLE',
+    async (data) => {
+      const { fonts, fontMode, name } = data;
+      console.log(fonts, fontMode, name);
+      const styles = loadStyles();
+      const newStyle = { fonts: pickData(fonts, fontMode), fontMode, name: name || 'Style' }
+      const newStyles = [...styles, newStyle];
+      saveStyles(newStyles);
+      emit<StylesChangeHandler>('STYLES_CHANGE', newStyles);
+    }
+  )
+
+  on<DeleteStyleHandler>(
+    'DELETE_STYLE', async (index: number) => {
+      const styles = loadStyles();
+      const newStyles = styles.filter((_, i) => i !== index);
+      saveStyles(newStyles)
+      emit<StylesChangeHandler>('STYLES_CHANGE', newStyles);
+    }
+  )
+
   on<ApplyHandler>(
     'APPLY',
     async (data) => {
-      const { fonts, fontMode } = data;
+      const { fonts, fontMode, saveSettings = false } = data;
 
       if (!isSelectedTextNode()) {
         return;
@@ -86,7 +118,7 @@ export default async () => {
       };
 
       const settings: Settings = { fonts, fontMode };
-      await saveSettingsAsync(settings, 'fonts');
+      if (saveSettings) await saveSettingsAsync(settings, 'fonts');
 
       figma.currentPage.selection.filter(
         (node): node is TextNode => node.type === 'TEXT',

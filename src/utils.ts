@@ -50,12 +50,7 @@ const styleMapping: Record<string, number> = {
 export const sortStyles = (styles: string[]) => {
   const sorted = styles
     .map((style) => {
-      const matches = Object.keys(styleMapping).filter(
-        (pattern) => style.replace(/ /, '').includes(pattern),
-      );
-      // 一番長いマッチを採用する、SemiBoldとBoldであればSemiBoldを採用する
-      const match = matches.reduce((a, b) => a.length > b.length ? a : b, "");
-      const weight = match ? styleMapping[match] : 400;
+      const weight = getFontWeight(style);
       const italic = style.includes('Italic');
       return { label: style, weight, italic };
     },)
@@ -65,6 +60,15 @@ export const sortStyles = (styles: string[]) => {
     )
     .map(({ label }) => label);
   return sorted;
+};
+
+export const getFontWeight = (style: string): number => {
+  const matches = Object.keys(styleMapping).filter(
+    (pattern) => style.replace(/ /, '').includes(pattern),
+  );
+  // 一番長いマッチを採用する、SemiBoldとBoldであればSemiBoldを採用する
+  const match = matches.reduce((a, b) => a.length > b.length ? a : b, "");
+  const weight = match ? styleMapping[match] : 400;
 };
 
 export const regexps: Record<Exclude<Category, 'normal'>, RegExp> = {
