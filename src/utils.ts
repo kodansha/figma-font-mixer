@@ -69,6 +69,7 @@ export const getFontWeight = (style: string): number => {
   // 一番長いマッチを採用する、SemiBoldとBoldであればSemiBoldを採用する
   const match = matches.reduce((a, b) => a.length > b.length ? a : b, "");
   const weight = match ? styleMapping[match] : 400;
+  return weight
 };
 
 export const regexps: Record<Exclude<Category, 'normal'>, RegExp> = {
