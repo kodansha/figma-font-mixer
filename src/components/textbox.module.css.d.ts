@@ -1,11 +1,11 @@
 declare const styles: {
-  readonly "textbox": string;
-  readonly "input": string;
+  readonly "border": string;
   readonly "disabled": string;
+  readonly "hasBorder": string;
   readonly "hasIcon": string;
   readonly "icon": string;
-  readonly "border": string;
-  readonly "hasBorder": string;
+  readonly "input": string;
+  readonly "textbox": string;
   readonly "underline": string;
 };
 export = styles;
