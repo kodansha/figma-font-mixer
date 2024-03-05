@@ -1,11 +1,11 @@
 {
   "extends": "@create-figma-plugin/tsconfig",
   "compilerOptions": {
-    "target": "ES2020",
     "typeRoots": [
       "node_modules/@figma",
       "node_modules/@types"
-    ]
+    ],
+    "downlevelIteration": true
   },
   "include": [
     "src/**/*.ts",
