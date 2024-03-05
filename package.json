@@ -34,6 +34,11 @@
     "name": "Font Mixer",
     "main": "src/main.ts",
     "ui": "src/ui.tsx",
+    "networkAccess": {
+      "allowedDomains": [
+        "none"
+      ]
+    },
     "relaunchButtons": {
       "openPlugin": {
         "name": "Open FontMixer",
