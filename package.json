@@ -29,7 +29,8 @@
   },
   "figma-plugin": {
     "editorType": [
-      "figma"
+      "figma",
+      "slides"
     ],
     "id": "1119612117220702803",
     "name": "Font Mixer",
