@@ -1,6 +1,6 @@
-import { h, type JSX } from 'preact';
-import { useEffect, useMemo } from 'preact/hooks';
 import { Dropdown, type DropdownOption } from '@create-figma-plugin/ui';
+import { type JSX, h } from 'preact';
+import { useEffect, useMemo } from 'preact/hooks';
 
 export const MyDropdown = (props: {
   options: string[];

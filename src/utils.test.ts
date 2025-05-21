@@ -1,4 +1,4 @@
-import { sortStyles, regexps } from './utils';
+import { regexps, sortStyles } from './utils';
 
 describe('sortStyles', () => {
   it('基本的なスタイルは太さ順に並ぶ', () => {

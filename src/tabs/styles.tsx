@@ -1,13 +1,14 @@
-import { h } from 'preact';
-import { emit } from '@create-figma-plugin/utilities';
 import {
-  IconTrash32,
-  IconButton,
   Container,
-  VerticalSpace,
-  Text,
+  IconButton,
+  IconTrash32,
   Muted,
+  Text,
+  VerticalSpace,
 } from '@create-figma-plugin/ui';
+import { emit } from '@create-figma-plugin/utilities';
+import { h } from 'preact';
+import { StyleIcon } from '../components/style-icon';
 import type {
   AdvancedCategory,
   ApplyHandler,
@@ -15,9 +16,8 @@ import type {
   SimpleCategory,
   Style,
 } from '../types';
-import cssStyles from './styles.module.css';
 import { getFontWeight } from '../utils';
-import { StyleIcon } from '../components/style-icon';
+import cssStyles from './styles.module.css';
 
 const readableText = (style: Style) => {
   const { fonts: _fonts, fontMode } = style;
@@ -54,7 +54,8 @@ const estimateWeight = (style: Style): number => {
         getFontWeight(fonts.normal.style),
       ].reduce((a, b) => a + b, 0) / 2
     );
-  }if (fontMode === 'advanced') {
+  }
+  if (fontMode === 'advanced') {
     const fonts = _fonts as Record<AdvancedCategory, FontName>;
     return (
       [
