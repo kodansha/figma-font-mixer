@@ -1,12 +1,12 @@
-import { h, JSX } from 'preact';
+import { Dropdown, type DropdownOption } from '@create-figma-plugin/ui';
+import { type JSX, h } from 'preact';
 import { useEffect, useMemo } from 'preact/hooks';
-import { Dropdown, DropdownOption } from '@create-figma-plugin/ui';
 
-export const MyDropdown = function (props: {
+export const MyDropdown = (props: {
   options: string[];
   value: string;
   onChange(option: string): void;
-}) {
+}) => {
   useEffect(() => {
     if (!props.options.includes(props.value)) {
       props.onChange(props.options[0]);

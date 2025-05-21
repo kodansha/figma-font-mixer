@@ -1,4 +1,4 @@
-import { Category, Settings } from './types';
+import type { Category, Settings } from './types';
 
 const defaultFonts: Record<'ja' | 'en', FontName> = {
   ja: {

@@ -1,42 +1,43 @@
-import { h } from 'preact';
-import { emit } from '@create-figma-plugin/utilities';
 import {
-  IconTrash32,
-  IconButton,
   Container,
-  VerticalSpace,
-  Text,
+  IconButton,
+  IconTrash32,
   Muted,
+  Text,
+  VerticalSpace,
 } from '@create-figma-plugin/ui';
-import {
+import { emit } from '@create-figma-plugin/utilities';
+import { h } from 'preact';
+import { StyleIcon } from '../components/style-icon';
+import type {
   AdvancedCategory,
   ApplyHandler,
   DeleteStyleHandler,
   SimpleCategory,
   Style,
 } from '../types';
-import cssStyles from './styles.module.css';
 import { getFontWeight } from '../utils';
-import { StyleIcon } from '../components/style-icon';
+import cssStyles from './styles.module.css';
 
 const readableText = (style: Style) => {
   const { fonts: _fonts, fontMode } = style;
   if (fontMode === 'simple') {
     const fonts = _fonts as Record<SimpleCategory, FontName>;
     return [
-      fonts['japanese'].family + ' ' + fonts['japanese'].style,
-      fonts['normal'].family + ' ' + fonts['normal'].style,
+      `${fonts.japanese.family} ${fonts.japanese.style}`,
+      `${fonts.normal.family} ${fonts.normal.style}`,
     ]
       .filter((v, i, a) => a.indexOf(v) === i)
       .join(', ');
-  } else if (fontMode === 'advanced') {
+  }
+  if (fontMode === 'advanced') {
     const fonts = _fonts as Record<AdvancedCategory, FontName>;
     return [
-      fonts['kanji'].family,
-      fonts['kana'].family,
-      fonts['yakumono'].family,
-      fonts['number'].family,
-      fonts['normal'].family,
+      fonts.kanji.family,
+      fonts.kana.family,
+      fonts.yakumono.family,
+      fonts.number.family,
+      fonts.normal.family,
     ]
       .filter((v, i, a) => a.indexOf(v) === i)
       .join(', ');
@@ -53,7 +54,8 @@ const estimateWeight = (style: Style): number => {
         getFontWeight(fonts.normal.style),
       ].reduce((a, b) => a + b, 0) / 2
     );
-  } else if (fontMode === 'advanced') {
+  }
+  if (fontMode === 'advanced') {
     const fonts = _fonts as Record<AdvancedCategory, FontName>;
     return (
       [

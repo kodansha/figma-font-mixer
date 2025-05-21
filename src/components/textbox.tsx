@@ -1,4 +1,4 @@
-import { h, JSX } from 'preact';
+import type { JSX, h } from 'preact';
 import styles from './textbox.module.css';
 
 // create-figma-plugin標準のTextboxにはIME周りのバグがあるために、自前で作成したものを利用している。

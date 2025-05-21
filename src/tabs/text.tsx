@@ -1,30 +1,30 @@
-import { Fragment, h } from 'preact';
-import { useState, useEffect, StateUpdater } from 'preact/hooks';
-import { emit, on } from '@create-figma-plugin/utilities';
 import {
+  Bold,
   Button,
   Container,
   Divider,
-  render,
-  VerticalSpace,
-  Text,
-  Bold,
+  IconButton,
   IconPlus32,
   Modal,
-  IconButton,
+  Text,
+  VerticalSpace,
+  render,
 } from '@create-figma-plugin/ui';
-import { FilterInput } from '../components/filter-input';
-import { MyDropdown } from '../components/dropdown';
+import { emit, on } from '@create-figma-plugin/utilities';
+import { Fragment, type h } from 'preact';
+import { type StateUpdater, useEffect, useState } from 'preact/hooks';
 import { Checkbox } from '../components/checkbox';
-import {
-  Fonts,
-  Category,
-  Settings,
-  ApplyHandler,
-  SelectionChangeHandler,
-  SaveStyleHandler,
-} from '../types';
+import { MyDropdown } from '../components/dropdown';
+import { FilterInput } from '../components/filter-input';
 import { Textbox } from '../components/textbox';
+import type {
+  ApplyHandler,
+  Category,
+  Fonts,
+  SaveStyleHandler,
+  SelectionChangeHandler,
+  Settings,
+} from '../types';
 
 export type UIProps = {
   families: string[];
