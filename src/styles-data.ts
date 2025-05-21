@@ -1,4 +1,4 @@
-import { Style } from './types';
+import type { Style } from './types';
 
 const STYLES_KEY = 'styles';
 const VERSION = 1;

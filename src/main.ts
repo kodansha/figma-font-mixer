@@ -7,7 +7,7 @@ import {
   loadSettingsAsync,
 } from '@create-figma-plugin/utilities';
 import { loadStyles, saveStyles } from './styles-data';
-import {
+import type {
   Settings,
   ApplyHandler,
   SelectionChangeHandler,
@@ -19,7 +19,7 @@ import {
   FontMode,
   SavedFonts,
 } from './types';
-import { UIProps } from './ui';
+import type { UIProps } from './ui';
 import { sortStyles, regexps, defaultSettings } from './utils';
 
 const mapToObject = (map: Map<string, string[]>): Record<string, string[]> =>

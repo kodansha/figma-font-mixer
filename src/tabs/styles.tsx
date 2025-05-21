@@ -8,7 +8,7 @@ import {
   Text,
   Muted,
 } from '@create-figma-plugin/ui';
-import {
+import type {
   AdvancedCategory,
   ApplyHandler,
   DeleteStyleHandler,

@@ -1,8 +1,8 @@
-import { h, JSX } from 'preact';
+import { h, type JSX } from 'preact';
 import { useMemo, useState } from 'preact/hooks';
 import {
   TextboxAutocomplete,
-  TextboxAutocompleteOption,
+  type TextboxAutocompleteOption,
 } from '@create-figma-plugin/ui';
 
 export const FilterInput = ({

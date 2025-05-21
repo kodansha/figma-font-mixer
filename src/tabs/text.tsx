@@ -1,5 +1,5 @@
-import { Fragment, h } from 'preact';
-import { useState, useEffect, StateUpdater } from 'preact/hooks';
+import { Fragment, type h } from 'preact';
+import { useState, useEffect, type StateUpdater } from 'preact/hooks';
 import { emit, on } from '@create-figma-plugin/utilities';
 import {
   Button,
@@ -16,7 +16,7 @@ import {
 import { FilterInput } from '../components/filter-input';
 import { MyDropdown } from '../components/dropdown';
 import { Checkbox } from '../components/checkbox';
-import {
+import type {
   Fonts,
   Category,
   Settings,

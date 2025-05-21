@@ -4,6 +4,14 @@
     "enabled": true,
     "indentStyle": "space"
   },
+  "linter": {
+    "rules" : {
+      "complexity": {
+        "noForEach": "off",
+        "useLiteralKeys": "off"
+      }
+    }
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "single"
