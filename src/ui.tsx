@@ -1,6 +1,6 @@
 import { Tabs, type TabsOption, render } from '@create-figma-plugin/ui';
 import { on } from '@create-figma-plugin/utilities';
-import type { h } from 'preact';
+import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { StylesTab } from './tabs/styles';
 import { TextTab } from './tabs/text';
