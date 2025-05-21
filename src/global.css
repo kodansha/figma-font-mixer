@@ -1,5 +1,5 @@
 /* WORKAROUND: tabs */
-#create-figma-plugin>div:first-child {
+#create-figma-plugin > div:first-child {
   position: sticky;
   top: 0;
   z-index: 1;

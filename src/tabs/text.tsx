@@ -39,8 +39,10 @@ const Heading = (props: {
   return (
     <Fragment>
       <VerticalSpace space="large" />
-      <Container space='medium'>
-        <Text><Bold>{props.children}</Bold></Text>
+      <Container space="medium">
+        <Text>
+          <Bold>{props.children}</Bold>
+        </Text>
       </Container>
       <VerticalSpace space="small" />
     </Fragment>
@@ -59,18 +61,20 @@ const FontSelector = (props: {
   const { family, style } = fontName;
 
   const onChangeFaimly = (next: string) => {
-    onChange(
-      (prev) => ({ ...prev, [category]: { ...prev[category], family: next } }),
-    );
+    onChange((prev) => ({
+      ...prev,
+      [category]: { ...prev[category], family: next },
+    }));
   };
   const onChangeStyle = (next: string) => {
-    onChange(
-      (prev) => ({ ...prev, [category]: { ...prev[category], style: next } }),
-    );
+    onChange((prev) => ({
+      ...prev,
+      [category]: { ...prev[category], style: next },
+    }));
   };
 
   return (
-    <Container space='extraSmall' style={{ display: 'flex' }}>
+    <Container space="extraSmall" style={{ display: 'flex' }}>
       <div style={{ minWidth: '60%' }}>
         <FilterInput
           options={familyOptions}
@@ -103,14 +107,14 @@ export const TextTab = ({
   settings,
 }: UIProps) => {
   const [editable, setEditable] = useState<boolean>(initialEditable);
-  const [mode, updateMode] = useState<"simple" | "advanced">(settings.fontMode)
+  const [mode, updateMode] = useState<'simple' | 'advanced'>(settings.fontMode);
   const [fonts, setFonts] = useState<Fonts>(settings.fonts);
 
   const apply = () => {
     emit<ApplyHandler>('APPLY', {
       fonts,
       fontMode: mode,
-      saveSettings: true
+      saveSettings: true,
     });
   };
 
@@ -120,12 +124,13 @@ export const TextTab = ({
     });
   }, []);
 
-  const categories = mode === 'advanced' ? [
-    'kanji', 'kana', 'yakumono', 'number', 'normal',
-  ] as const : ['japanese', 'normal'] as const;
+  const categories =
+    mode === 'advanced'
+      ? (['kanji', 'kana', 'yakumono', 'number', 'normal'] as const)
+      : (['japanese', 'normal'] as const);
 
-  const [isOpen, setOpen] = useState(false)
-  const [name, setName] = useState('')
+  const [isOpen, setOpen] = useState(false);
+  const [name, setName] = useState('');
 
   return (
     <Fragment>
@@ -137,37 +142,48 @@ export const TextTab = ({
       >
         <Container space="small" style={{ width: 240 }}>
           <VerticalSpace space="small" />
-          <form style={{ margin: 0 }} onSubmit={(e) => {
-            // ここでemit
-            emit<SaveStyleHandler>('SAVE_STYLE', {
-              name,
-              fonts,
-              fontMode: mode
-            })
-            setOpen(false)
-            setName('')
-            e.preventDefault();
-          }}>
-            <Textbox placeholder='Style name' onInput={(e: h.JSX.TargetedEvent) => {
-              const newValue = (e.currentTarget as any).value
-              setName(newValue)
-            }} value={name} />
+          <form
+            style={{ margin: 0 }}
+            onSubmit={(e) => {
+              // ここでemit
+              emit<SaveStyleHandler>('SAVE_STYLE', {
+                name,
+                fonts,
+                fontMode: mode,
+              });
+              setOpen(false);
+              setName('');
+              e.preventDefault();
+            }}
+          >
+            <Textbox
+              placeholder="Style name"
+              onInput={(e: h.JSX.TargetedEvent) => {
+                const newValue = (e.currentTarget as any).value;
+                setName(newValue);
+              }}
+              value={name}
+            />
             <VerticalSpace space="extraSmall" />
-            <Button type='submit'>Save styles</Button>
+            <Button type="submit">Save styles</Button>
           </form>
           <VerticalSpace space="small" />
         </Container>
       </Modal>
-      <IconButton title="Create text style" style={{
-        position: 'fixed',
-        right: 8,
-        top: 5,
-        zIndex: 1,
-      }} onClick={() => {
-        const name = ''
-        console.log({ name, mode, fonts })
-        setOpen(true)
-        }}>
+      <IconButton
+        title="Create text style"
+        style={{
+          position: 'fixed',
+          right: 8,
+          top: 5,
+          zIndex: 1,
+        }}
+        onClick={() => {
+          const name = '';
+          console.log({ name, mode, fonts });
+          setOpen(true);
+        }}
+      >
         <IconPlus32 />
       </IconButton>
       <div style={{ paddingBottom: 48 + 16 }}>
@@ -210,12 +226,14 @@ export const TextTab = ({
             <Checkbox
               value={mode === 'advanced'}
               onChange={(val) => {
-                updateMode(val ? 'advanced' : 'simple')
+                updateMode(val ? 'advanced' : 'simple');
               }}
               label={'Detail settings'}
             />
           </div>
-          <Button disabled={!editable} onClick={apply}>Apply</Button>
+          <Button disabled={!editable} onClick={apply}>
+            Apply
+          </Button>
         </div>
       </div>
     </Fragment>
