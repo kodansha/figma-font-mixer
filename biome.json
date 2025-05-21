@@ -17,7 +17,9 @@
     "rules": {
       "recommended": true,
       "correctness": {
-        "noUnusedImports": "off",
+        "noUnusedImports": "off"
+      },
+      "style": {
         "useImportType": "off"
       }
     }
