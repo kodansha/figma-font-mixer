@@ -9,6 +9,10 @@
       "complexity": {
         "noForEach": "off",
         "useLiteralKeys": "off"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useKeyWithClickEvents": "off"
       }
     }
   },

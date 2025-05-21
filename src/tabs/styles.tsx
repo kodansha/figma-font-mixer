@@ -24,12 +24,13 @@ const readableText = (style: Style) => {
   if (fontMode === 'simple') {
     const fonts = _fonts as Record<SimpleCategory, FontName>;
     return [
-      fonts['japanese'].family + ' ' + fonts['japanese'].style,
-      fonts['normal'].family + ' ' + fonts['normal'].style,
+      `${fonts['japanese'].family} ${fonts['japanese'].style}`,
+      `${fonts['normal'].family} ${fonts['normal'].style}`,
     ]
       .filter((v, i, a) => a.indexOf(v) === i)
       .join(', ');
-  } else if (fontMode === 'advanced') {
+  }
+  if (fontMode === 'advanced') {
     const fonts = _fonts as Record<AdvancedCategory, FontName>;
     return [
       fonts['kanji'].family,
@@ -53,7 +54,7 @@ const estimateWeight = (style: Style): number => {
         getFontWeight(fonts.normal.style),
       ].reduce((a, b) => a + b, 0) / 2
     );
-  } else if (fontMode === 'advanced') {
+  }if (fontMode === 'advanced') {
     const fonts = _fonts as Record<AdvancedCategory, FontName>;
     return (
       [

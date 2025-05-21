@@ -1,4 +1,5 @@
-import { Fragment, type h } from 'preact';
+/* biome-ignore lint:style/useImportType */
+import { Fragment, h } from 'preact';
 import { useState, useEffect, type StateUpdater } from 'preact/hooks';
 import { emit, on } from '@create-figma-plugin/utilities';
 import {
