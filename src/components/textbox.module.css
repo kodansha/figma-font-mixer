@@ -42,7 +42,7 @@
   transform: translate(-50%, -50%);
 }
 
-.textbox:not(.disabled) .input:focus~.icon {
+.textbox:not(.disabled) .input:focus ~ .icon {
   color: var(--figma-color-icon-brand);
 }
 
@@ -70,7 +70,7 @@
   border-color: var(--figma-color-border);
 }
 
-.textbox:not(.disabled) .input:focus~.border {
+.textbox:not(.disabled) .input:focus ~ .border {
   top: -1px;
   bottom: -1px;
   border-width: 2px;
@@ -86,7 +86,7 @@
   background-color: var(--figma-color-border);
 }
 
-.textbox:not(.disabled) .input:focus~.underline,
+.textbox:not(.disabled) .input:focus ~ .underline,
 .textbox:not(.disabled):hover .underline {
   background-color: transparent;
 }

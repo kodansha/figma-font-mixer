@@ -53,23 +53,23 @@ export const sortStyles = (styles: string[]) => {
       const weight = getFontWeight(style);
       const italic = style.includes('Italic');
       return { label: style, weight, italic };
-    },)
+    })
     .sort(
       (a, b) =>
-        a.weight - b.weight - ((Number(b.italic) - Number(a.italic)) * 1000),
+        a.weight - b.weight - (Number(b.italic) - Number(a.italic)) * 1000,
     )
     .map(({ label }) => label);
   return sorted;
 };
 
 export const getFontWeight = (style: string): number => {
-  const matches = Object.keys(styleMapping).filter(
-    (pattern) => style.replace(/ /, '').includes(pattern),
+  const matches = Object.keys(styleMapping).filter((pattern) =>
+    style.replace(/ /, '').includes(pattern),
   );
   // 一番長いマッチを採用する、SemiBoldとBoldであればSemiBoldを採用する
-  const match = matches.reduce((a, b) => a.length > b.length ? a : b, "");
+  const match = matches.reduce((a, b) => (a.length > b.length ? a : b), '');
   const weight = match ? styleMapping[match] : 400;
-  return weight
+  return weight;
 };
 
 export const regexps: Record<Exclude<Category, 'normal'>, RegExp> = {

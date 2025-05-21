@@ -1,12 +1,17 @@
 import { EventHandler } from '@create-figma-plugin/utilities';
 
 export type SimpleCategory = 'normal' | 'japanese';
-export type AdvancedCategory = 'kanji' | 'kana' | 'yakumono' | 'number' | 'normal';
+export type AdvancedCategory =
+  | 'kanji'
+  | 'kana'
+  | 'yakumono'
+  | 'number'
+  | 'normal';
 export type Category = SimpleCategory | AdvancedCategory;
 export type Fonts = Record<Category, FontName>;
 export type SavedFonts =
-  Record<SimpleCategory, FontName> |
-  Record<AdvancedCategory, FontName>;
+  | Record<SimpleCategory, FontName>
+  | Record<AdvancedCategory, FontName>;
 
 export type FontMode = 'simple' | 'advanced';
 
@@ -14,7 +19,7 @@ export type Style = {
   fonts: SavedFonts;
   fontMode: FontMode;
   name: string;
-}
+};
 
 export type Settings = {
   fonts: Fonts;
@@ -23,31 +28,25 @@ export type Settings = {
 
 export interface ApplyHandler extends EventHandler {
   name: 'APPLY';
-  handler: (
-    data: {
-      fonts: Fonts;
-      fontMode: FontMode;
-      saveSettings?: boolean;
-    },
-  ) => void;
+  handler: (data: {
+    fonts: Fonts;
+    fontMode: FontMode;
+    saveSettings?: boolean;
+  }) => void;
 }
 
 export interface SaveStyleHandler extends EventHandler {
   name: 'SAVE_STYLE';
-  handler: (
-    data: {
-      fonts: Fonts;
-      fontMode: FontMode;
-      name: string;
-    }
-  ) => void;
+  handler: (data: {
+    fonts: Fonts;
+    fontMode: FontMode;
+    name: string;
+  }) => void;
 }
 
 export interface DeleteStyleHandler extends EventHandler {
   name: 'DELETE_STYLE';
-  handler: (
-    index: number,
-  ) => void;
+  handler: (index: number) => void;
 }
 
 export interface SelectionChangeHandler extends EventHandler {
