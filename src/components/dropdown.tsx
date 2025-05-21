@@ -11,7 +11,7 @@ export const MyDropdown = (props: {
     if (!props.options.includes(props.value)) {
       props.onChange(props.options[0]);
     }
-  }, props.options);
+  }, [props.options, props.onChange, props.value]);
 
   const options: DropdownOption[] = useMemo(() => {
     return props.options.map((option) => {
