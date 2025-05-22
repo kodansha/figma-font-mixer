@@ -61,7 +61,7 @@ const FontSelector = (props: {
   const { category, fontName, onChange, familyOptions, styleOptions } = props;
   const { family, style } = fontName;
 
-  const onChangeFaimly = (next: string) => {
+  const onChangeFamily = (next: string) => {
     onChange((prev) => ({
       ...prev,
       [category]: { ...prev[category], family: next },
@@ -80,7 +80,7 @@ const FontSelector = (props: {
         <FilterInput
           options={familyOptions}
           initialValue={family}
-          onChange={onChangeFaimly}
+          onChange={onChangeFamily}
         />
       </div>
       <MyDropdown

@@ -78,7 +78,7 @@ export const StylesTab = ({ styles }: any) => {
         <Container space="medium">
           <VerticalSpace space="small" />
           <Text>
-            <Muted>There is no styles</Muted>
+            <Muted>There are no styles</Muted>
           </Text>
         </Container>
       )}
