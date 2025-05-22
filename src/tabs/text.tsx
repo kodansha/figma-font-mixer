@@ -1,5 +1,6 @@
+/* biome-ignore lint:style/useImportType */
 import { Fragment, h } from 'preact';
-import { useState, useEffect, StateUpdater } from 'preact/hooks';
+import { useState, useEffect, type StateUpdater } from 'preact/hooks';
 import { emit, on } from '@create-figma-plugin/utilities';
 import {
   Button,
@@ -16,7 +17,7 @@ import {
 import { FilterInput } from '../components/filter-input';
 import { MyDropdown } from '../components/dropdown';
 import { Checkbox } from '../components/checkbox';
-import {
+import type {
   Fonts,
   Category,
   Settings,
@@ -159,6 +160,7 @@ export const TextTab = ({
             <Textbox
               placeholder="Style name"
               onInput={(e: h.JSX.TargetedEvent) => {
+                // biome-ignore lint:suspicious/noExplicitAny
                 const newValue = (e.currentTarget as any).value;
                 setName(newValue);
               }}

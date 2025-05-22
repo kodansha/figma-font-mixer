@@ -4,6 +4,18 @@
     "enabled": true,
     "indentStyle": "space"
   },
+  "linter": {
+    "rules" : {
+      "complexity": {
+        "noForEach": "off",
+        "useLiteralKeys": "off"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useKeyWithClickEvents": "off"
+      }
+    }
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "single"
@@ -11,5 +23,10 @@
   },
   "organizeImports": {
     "enabled": true
+  },
+  "files": {
+    "ignore": [
+      "**/*.css.d.ts"
+    ]
   }
 }

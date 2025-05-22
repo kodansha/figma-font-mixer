@@ -1,26 +1,26 @@
 import {
   emit,
-  on,
-  showUI,
-  setRelaunchButton,
-  saveSettingsAsync,
   loadSettingsAsync,
+  on,
+  saveSettingsAsync,
+  setRelaunchButton,
+  showUI,
 } from '@create-figma-plugin/utilities';
 import { loadStyles, saveStyles } from './styles-data';
-import {
-  Settings,
+import type {
   ApplyHandler,
-  SelectionChangeHandler,
   Category,
-  SaveStyleHandler,
   DeleteStyleHandler,
-  StylesChangeHandler,
-  Fonts,
   FontMode,
+  Fonts,
+  SaveStyleHandler,
   SavedFonts,
+  SelectionChangeHandler,
+  Settings,
+  StylesChangeHandler,
 } from './types';
-import { UIProps } from './ui';
-import { sortStyles, regexps, defaultSettings } from './utils';
+import type { UIProps } from './ui';
+import { defaultSettings, regexps, sortStyles } from './utils';
 
 const mapToObject = (map: Map<string, string[]>): Record<string, string[]> =>
   [...map].reduce((l, [k, v]) => Object.assign(l, { [k]: v }), {});

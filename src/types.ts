@@ -1,4 +1,4 @@
-import { EventHandler } from '@create-figma-plugin/utilities';
+import type { EventHandler } from '@create-figma-plugin/utilities';
 
 export type SimpleCategory = 'normal' | 'japanese';
 export type AdvancedCategory =

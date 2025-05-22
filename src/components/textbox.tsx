@@ -1,4 +1,5 @@
-import { h, JSX } from 'preact';
+/* biome-ignore lint:style/useImportType */
+import { h, type JSX } from 'preact';
 import styles from './textbox.module.css';
 
 // create-figma-plugin標準のTextboxにはIME周りのバグがあるために、自前で作成したものを利用している。

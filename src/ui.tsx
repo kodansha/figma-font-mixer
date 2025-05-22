@@ -1,15 +1,16 @@
-import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { Tabs, type TabsOption, render } from '@create-figma-plugin/ui';
 import { on } from '@create-figma-plugin/utilities';
-import { render, Tabs, TabsOption } from '@create-figma-plugin/ui';
-import {
-  Settings,
-  SelectionChangeHandler,
-  StylesChangeHandler,
-  Style,
-} from './types';
-import { TextTab } from './tabs/text';
+/* biome-ignore lint:style/useImportType */
+import { h } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 import { StylesTab } from './tabs/styles';
+import { TextTab } from './tabs/text';
+import type {
+  SelectionChangeHandler,
+  Settings,
+  Style,
+  StylesChangeHandler,
+} from './types';
 import '!./global.css';
 
 export type UIProps = {
@@ -60,6 +61,7 @@ const App = ({
 
   const [tab, setTab] = useState<string>(tabOptions[0].value);
   const handleTabChange = (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+    // biome-ignore lint:style/useTypeCasting
     const newValue = event.currentTarget.value as any;
     setTab(newValue);
   };

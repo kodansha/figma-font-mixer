@@ -1,5 +1,5 @@
+import { Text, Checkbox as UICheckbox } from '@create-figma-plugin/ui';
 import { h } from 'preact';
-import { Checkbox as UICheckbox, Text } from '@create-figma-plugin/ui';
 
 export const Checkbox = (props: {
   value: boolean;
