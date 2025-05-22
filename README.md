@@ -1,6 +1,6 @@
 # Japanese Font Mixer
 
- [![Figma Plugin](https://img.shields.io/badge/figma-Font%20Mixer-green?cacheSeconds=1800)](https://www.figma.com/community/plugin/1119612117220702803)
+[![Figma Plugin](https://img.shields.io/badge/figma-Font%20Mixer-green?cacheSeconds=1800)](https://www.figma.com/community/plugin/1119612117220702803)
 
  日本語とそれ以外のテキストにそれぞれフォントを設定できるFigmaプラグインです。
 
