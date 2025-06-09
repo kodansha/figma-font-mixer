@@ -1,7 +1,7 @@
 import {
   Container,
   IconButton,
-  IconTrash32,
+  IconTrash24,
   Muted,
   Text,
   VerticalSpace,
@@ -114,7 +114,7 @@ export const StylesTab = ({ styles }: any) => {
                   emit<DeleteStyleHandler>('DELETE_STYLE', index);
                 }}
               >
-                <IconTrash32 />
+                <IconTrash24 />
               </IconButton>
             </div>
           </div>

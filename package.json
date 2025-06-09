@@ -14,8 +14,8 @@
   "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@create-figma-plugin/build": "^3.2.1",
-    "@create-figma-plugin/tsconfig": "^3.2.1",
+    "@create-figma-plugin/build": "^4.0.1",
+    "@create-figma-plugin/tsconfig": "^4.0.1",
     "@figma/plugin-typings": "^1.106.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.1",
@@ -24,8 +24,8 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@create-figma-plugin/ui": "^3.2.1",
-    "@create-figma-plugin/utilities": "^3.2.1",
+    "@create-figma-plugin/ui": "^4.0.1",
+    "@create-figma-plugin/utilities": "^4.0.1",
     "preact": "^10.10.6"
   },
   "figma-plugin": {

@@ -55,7 +55,7 @@ const App = ({
     },
     {
       children: <StylesTab styles={styles} />,
-      value: 'Styles(Beta)',
+      value: 'Styles',
     },
   ];
 

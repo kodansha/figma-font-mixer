@@ -10,7 +10,7 @@ import {
   VerticalSpace,
   Text,
   Bold,
-  IconPlus32,
+  IconPlus24,
   Modal,
   IconButton,
 } from '@create-figma-plugin/ui';
@@ -75,7 +75,7 @@ const FontSelector = (props: {
   };
 
   return (
-    <Container space="extraSmall" style={{ display: 'flex' }}>
+    <Container space="extraSmall" style={{ display: 'flex', gap: 8, position: 'relative' }}>
       <div style={{ minWidth: '60%' }}>
         <FilterInput
           options={familyOptions}
@@ -177,8 +177,9 @@ export const TextTab = ({
         style={{
           position: 'fixed',
           right: 8,
-          top: 5,
+          top: 6,
           zIndex: 1,
+          padding: 12,
         }}
         onClick={() => {
           const name = '';
@@ -186,7 +187,7 @@ export const TextTab = ({
           setOpen(true);
         }}
       >
-        <IconPlus32 />
+        <IconPlus24 />
       </IconButton>
       <div style={{ paddingBottom: 48 + 16 }}>
         {categories.map((category) => {
