@@ -4,6 +4,7 @@ import {
 } from '@create-figma-plugin/ui';
 import { type JSX, h } from 'preact';
 import { useMemo, useState } from 'preact/hooks';
+import styles from './filter-input.css';
 
 export const FilterInput = ({
   options: rawOptions,
@@ -34,7 +35,7 @@ export const FilterInput = ({
     isTop = window.innerHeight - y * 2 < 0;
   }
   return (
-    <div ref={setRef}>
+    <div ref={setRef} className={styles.input}>
       <TextboxAutocomplete
         top={isTop}
         filter

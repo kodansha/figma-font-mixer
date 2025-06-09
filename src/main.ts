@@ -66,7 +66,7 @@ export default async () => {
   showUI<UIProps>(
     {
       width: 300,
-      height: 420,
+      height: 430,
     },
     data,
   );

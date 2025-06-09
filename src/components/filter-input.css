@@ -1,0 +1,6 @@
+/* FIXME: create-figma-plugin@4にしたタイミングで親コンテナを突き抜けるようになったための対応
+  スクロールバーがあるときの幅を基準にしているので、simpleモードでは余白があるように見える
+*/
+.input > div > div > div {
+  max-width: calc(100vw - 24px);
+}
