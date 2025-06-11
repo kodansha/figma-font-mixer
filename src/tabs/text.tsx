@@ -6,7 +6,6 @@ import {
   Button,
   Container,
   Divider,
-  render,
   VerticalSpace,
   Text,
   Bold,

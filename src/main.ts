@@ -49,7 +49,7 @@ export default async () => {
   });
 
   const familyStyles = mapToObject(styleMap);
-  Object.keys(familyStyles).map((key) => {
+  Object.keys(familyStyles).forEach((key) => {
     const values = familyStyles[key];
     familyStyles[key] = sortStyles(values);
   });
