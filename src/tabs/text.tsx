@@ -24,6 +24,7 @@ import type {
   SelectionChangeHandler,
   SaveStyleHandler,
 } from '../types';
+import { ADVANCED_CATEGORIES, SIMPLE_CATEGORIES } from '../types';
 import { Textbox } from '../components/textbox';
 
 export type UIProps = {
@@ -74,7 +75,10 @@ const FontSelector = (props: {
   };
 
   return (
-    <Container space="extraSmall" style={{ display: 'flex', gap: 8, position: 'relative' }}>
+    <Container
+      space="extraSmall"
+      style={{ display: 'flex', gap: 8, position: 'relative' }}
+    >
       <div style={{ minWidth: '60%' }}>
         <FilterInput
           options={familyOptions}
@@ -125,9 +129,7 @@ export const TextTab = ({
   }, []);
 
   const categories =
-    mode === 'advanced'
-      ? (['kanji', 'kana', 'yakumono', 'number', 'normal'] as const)
-      : (['japanese', 'normal'] as const);
+    mode === 'advanced' ? ADVANCED_CATEGORIES : SIMPLE_CATEGORIES;
 
   const [isOpen, setOpen] = useState(false);
   const [name, setName] = useState('');
