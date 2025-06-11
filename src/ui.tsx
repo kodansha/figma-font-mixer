@@ -61,8 +61,7 @@ const App = ({
 
   const [tab, setTab] = useState<string>(tabOptions[0].value);
   const handleTabChange = (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
-    // biome-ignore lint:style/useTypeCasting
-    const newValue = event.currentTarget.value as any;
+    const newValue = event.currentTarget.value;
     setTab(newValue);
   };
   return <Tabs options={tabOptions} value={tab} onChange={handleTabChange} />;

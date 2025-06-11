@@ -13,6 +13,7 @@ import type {
   AdvancedCategory,
   ApplyHandler,
   DeleteStyleHandler,
+  Fonts,
   SimpleCategory,
   Style,
 } from '../types';
@@ -70,8 +71,9 @@ const estimateWeight = (style: Style): number => {
   return 400;
 };
 
-// biome-ignore lint:style/useImportType
-export const StylesTab = ({ styles }: any) => {
+export const StylesTab = ({ styles }: {
+  styles: Style[];
+}) => {
   return (
     <div style={{ padding: '8px 0' }}>
       {styles.length === 0 && (
@@ -82,8 +84,7 @@ export const StylesTab = ({ styles }: any) => {
           </Text>
         </Container>
       )}
-      {/* biome-ignore lint:suspicious/noExplicitAny */}
-      {styles.map((style: any, index: number) => {
+      {styles.map((style: Style, index: number) => {
         const familyText = readableText(style);
         return (
           <div
@@ -93,7 +94,7 @@ export const StylesTab = ({ styles }: any) => {
             onClick={() => {
               console.log('ciicked', style);
               emit<ApplyHandler>('APPLY', {
-                fonts: style.fonts,
+                fonts: style.fonts as Fonts,
                 fontMode: style.fontMode,
               });
             }}

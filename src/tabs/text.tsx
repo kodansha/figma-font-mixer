@@ -158,9 +158,8 @@ export const TextTab = ({
           >
             <Textbox
               placeholder="Style name"
-              onInput={(e: h.JSX.TargetedEvent) => {
-                // biome-ignore lint:suspicious/noExplicitAny
-                const newValue = (e.currentTarget as any).value;
+              onInput={(e: h.JSX.TargetedEvent<HTMLInputElement>) => {
+                const newValue = e.currentTarget.value;
                 setName(newValue);
               }}
               value={name}
