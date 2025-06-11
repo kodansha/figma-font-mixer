@@ -1,4 +1,4 @@
-import { regexps, sortStyles } from './utils';
+import { regexps, sortStyles, getFontWeight } from './utils';
 
 describe('sortStyles', () => {
   it('基本的なスタイルは太さ順に並ぶ', () => {
@@ -29,6 +29,16 @@ describe('sortStyles', () => {
     const input = ['Medium', 'Light', 'Unknown'];
     const output = ['Light', 'Unknown', 'Medium'];
     expect(sortStyles(input)).toStrictEqual(output);
+  });
+});
+
+describe('getFontWeight', () => {
+  it('スペースを含むスタイルでも適切な太さを返す', () => {
+    expect(getFontWeight('Semi Bold Italic')).toBe(600);
+  });
+
+  it('スタイル名に空白がない場合も正しい太さを返す', () => {
+    expect(getFontWeight('ExtraLight')).toBe(200);
   });
 });
 
