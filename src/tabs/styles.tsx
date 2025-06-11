@@ -17,6 +17,7 @@ import type {
   SimpleCategory,
   Style,
 } from '../types';
+import { ADVANCED_CATEGORIES, SIMPLE_CATEGORIES } from '../types';
 import { getFontWeight } from '../utils';
 import cssStyles from './styles.module.css';
 
@@ -24,22 +25,13 @@ const readableText = (style: Style) => {
   const { fonts: _fonts, fontMode } = style;
   if (fontMode === 'simple') {
     const fonts = _fonts as Record<SimpleCategory, FontName>;
-    return [
-      `${fonts['japanese'].family} ${fonts['japanese'].style}`,
-      `${fonts['normal'].family} ${fonts['normal'].style}`,
-    ]
+    return SIMPLE_CATEGORIES.map((c) => `${fonts[c].family} ${fonts[c].style}`)
       .filter((v, i, a) => a.indexOf(v) === i)
       .join(', ');
   }
   if (fontMode === 'advanced') {
     const fonts = _fonts as Record<AdvancedCategory, FontName>;
-    return [
-      fonts['kanji'].family,
-      fonts['kana'].family,
-      fonts['yakumono'].family,
-      fonts['number'].family,
-      fonts['normal'].family,
-    ]
+    return ADVANCED_CATEGORIES.map((c) => fonts[c].family)
       .filter((v, i, a) => a.indexOf(v) === i)
       .join(', ');
   }
@@ -50,28 +42,27 @@ const estimateWeight = (style: Style): number => {
   if (fontMode === 'simple') {
     const fonts = _fonts as Record<SimpleCategory, FontName>;
     return (
-      [
-        getFontWeight(fonts.japanese.style),
-        getFontWeight(fonts.normal.style),
-      ].reduce((a, b) => a + b, 0) / 2
+      SIMPLE_CATEGORIES.map((c) => getFontWeight(fonts[c].style)).reduce(
+        (a, b) => a + b,
+        0,
+      ) / SIMPLE_CATEGORIES.length
     );
   }
   if (fontMode === 'advanced') {
     const fonts = _fonts as Record<AdvancedCategory, FontName>;
     return (
-      [
-        getFontWeight(fonts.kanji.style),
-        getFontWeight(fonts.kana.style),
-        getFontWeight(fonts.yakumono.style),
-        getFontWeight(fonts.number.style),
-        getFontWeight(fonts.normal.style),
-      ].reduce((a, b) => a + b, 0) / 5
+      ADVANCED_CATEGORIES.map((c) => getFontWeight(fonts[c].style)).reduce(
+        (a, b) => a + b,
+        0,
+      ) / ADVANCED_CATEGORIES.length
     );
   }
   return 400;
 };
 
-export const StylesTab = ({ styles }: {
+export const StylesTab = ({
+  styles,
+}: {
   styles: Style[];
 }) => {
   return (

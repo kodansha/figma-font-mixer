@@ -7,6 +7,15 @@ export type AdvancedCategory =
   | 'yakumono'
   | 'number'
   | 'normal';
+
+export const SIMPLE_CATEGORIES = ['japanese', 'normal'] as const;
+export const ADVANCED_CATEGORIES = [
+  'kanji',
+  'kana',
+  'yakumono',
+  'number',
+  'normal',
+] as const;
 export type Category = SimpleCategory | AdvancedCategory;
 export type Fonts = Record<Category, FontName>;
 export type SavedFonts =
