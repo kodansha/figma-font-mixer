@@ -19,6 +19,7 @@ import type {
   Settings,
   StylesChangeHandler,
 } from './types';
+import { ADVANCED_CATEGORIES, SIMPLE_CATEGORIES } from './types';
 import type { UIProps } from './ui';
 import { defaultSettings, regexps, sortStyles } from './utils';
 
@@ -49,7 +50,7 @@ export default async () => {
   });
 
   const familyStyles = mapToObject(styleMap);
-  Object.keys(familyStyles).map((key) => {
+  Object.keys(familyStyles).forEach((key) => {
     const values = familyStyles[key];
     familyStyles[key] = sortStyles(values);
   });
@@ -120,16 +121,15 @@ export default async () => {
       await figma.loadFontAsync(fontNames[i]);
     }
 
-    const { japanese, kanji, kana, yakumono, number, normal } = fonts;
+    const { normal } = fonts;
+    const categoryList =
+      fontMode === 'simple' ? SIMPLE_CATEGORIES : ADVANCED_CATEGORIES;
     const categories: Partial<Record<Exclude<Category, 'normal'>, FontName>> =
-      fontMode === 'simple'
-        ? { japanese }
-        : {
-            kanji,
-            kana,
-            yakumono,
-            number,
-          };
+      {};
+    for (const key of categoryList) {
+      if (key === 'normal') continue;
+      categories[key] = fonts[key];
+    }
 
     const settings: Settings = { fonts, fontMode };
     if (saveSettings) await saveSettingsAsync(settings, 'fonts');
