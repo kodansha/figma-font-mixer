@@ -41,6 +41,7 @@ export interface ApplyHandler extends EventHandler {
     fonts: Fonts;
     fontMode: FontMode;
     saveSettings?: boolean;
+    applyToPage?: boolean;
   }) => void;
 }
 

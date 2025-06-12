@@ -110,9 +110,9 @@ export default async () => {
   });
 
   on<ApplyHandler>('APPLY', async (data) => {
-    const { fonts, fontMode, saveSettings = false } = data;
+    const { fonts, fontMode, saveSettings = false, applyToPage = false } = data;
 
-    if (!isSelectedTextNode()) {
+    if (!applyToPage && !isSelectedTextNode()) {
       return;
     }
 
@@ -134,13 +134,20 @@ export default async () => {
     const settings: Settings = { fonts, fontMode };
     if (saveSettings) await saveSettingsAsync(settings, 'fonts');
 
-    figma.currentPage.selection
-      .filter((node): node is TextNode => node.type === 'TEXT')
-      .forEach(async (node) => {
-        let start = 0;
-        let end = node.characters.length;
-        let characters = node.characters;
+    const targets = applyToPage
+      ? (figma.currentPage.findAll(
+          (node) => node.type === 'TEXT',
+        ) as TextNode[])
+      : figma.currentPage.selection.filter(
+          (node): node is TextNode => node.type === 'TEXT',
+        );
 
+    targets.forEach(async (node) => {
+      let start = 0;
+      let end = node.characters.length;
+      let characters = node.characters;
+
+      if (!applyToPage) {
         // 部分選択の場合は選択された部分のみに適用する
         const selectedTextRange = figma.currentPage.selectedTextRange;
         if (
@@ -163,25 +170,28 @@ export default async () => {
         } else {
           node.fontName = normal;
         }
+      } else {
+        node.fontName = normal;
+      }
 
-        (Object.keys(categories) as (keyof typeof categories)[]).forEach(
-          (categoryKey) => {
-            const regexp = regexps[categoryKey];
-            const matches = characters.matchAll(regexp);
-            const fontName = categories[categoryKey];
-            if (!fontName) return;
-            for (const match of matches) {
-              // console.log('match', match[0])
-              const startIndex = start + (match.index || 0);
-              node.setRangeFontName(
-                startIndex,
-                startIndex + match[0].length,
-                fontName,
-              );
-            }
-          },
-        );
-        setRelaunchButton(node, 'openPlugin');
-      });
+      (Object.keys(categories) as (keyof typeof categories)[]).forEach(
+        (categoryKey) => {
+          const regexp = regexps[categoryKey];
+          const matches = characters.matchAll(regexp);
+          const fontName = categories[categoryKey];
+          if (!fontName) return;
+          for (const match of matches) {
+            // console.log('match', match[0])
+            const startIndex = start + (match.index || 0);
+            node.setRangeFontName(
+              startIndex,
+              startIndex + match[0].length,
+              fontName,
+            );
+          }
+        },
+      );
+      setRelaunchButton(node, 'openPlugin');
+    });
   });
 };
