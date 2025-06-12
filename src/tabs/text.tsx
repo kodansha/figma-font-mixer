@@ -15,6 +15,7 @@ import {
 } from '@create-figma-plugin/ui';
 import { FilterInput } from '../components/filter-input';
 import { MyDropdown } from '../components/dropdown';
+import { ApplyDropdown } from '../components/apply-dropdown';
 import { Checkbox } from '../components/checkbox';
 import type {
   Fonts,
@@ -234,9 +235,18 @@ export const TextTab = ({
               label={'Detail settings'}
             />
           </div>
-          <Button disabled={!editable} onClick={apply}>
-            Apply
-          </Button>
+          <ApplyDropdown
+            disabled={!editable}
+            onApplySelection={apply}
+            onApplyPage={() =>
+              emit<ApplyHandler>('APPLY', {
+                fonts,
+                fontMode: mode,
+                saveSettings: true,
+                applyToPage: true,
+              })
+            }
+          />
         </div>
       </div>
     </Fragment>
